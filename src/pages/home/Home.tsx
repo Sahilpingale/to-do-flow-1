@@ -66,10 +66,10 @@ const Home = () => {
         </button>
       </div>
 
-      <section className="h-[50vh] w-full dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">
+      <section className="w-full dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">
         {/* Flip words */}
         <div className="h-48 w-full flex justify-center items-center px-2 sm:px-4">
-          <div className="text-2xl sm:text-3xl md:text-4xl mx-auto font-normal text-neutral-600 dark:text-neutral-400 w-full max-w-md">
+          <div className="text-2xl sm:text-3xl md:text-4xl mx-auto font-normal text-neutral-600 dark:text-neutral-400 w-full max-w-fit md:max-w-md">
             Manage tasks
             <FlipWords
               words={["effortlessly", "efficiently", "seamlessly"]}
@@ -83,13 +83,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Replace the existing table section with this */}
-      <div className="py-4 px-8 ">
+      {/* Table */}
+      <div className="p-4 md:p-8 lg:p-16">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="sm:text-2xl md:text-3xl font-semibold">Projects</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold">Projects</h2>
           <button
             onClick={handleCreateProject}
-            className="px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors"
+            className="px-4 py-2 text-sm md:text-base bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors"
           >
             New Project
           </button>
