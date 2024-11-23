@@ -9,4 +9,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  base: "/to-do-flow-1/",
 })
