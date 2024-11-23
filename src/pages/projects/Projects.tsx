@@ -21,6 +21,7 @@ import { initialNodes, nodeTypes } from "./nodes"
 import { initialEdges, edgeTypes } from "./edges"
 import { useTheme } from "@/contexts/ThemeProvider"
 import { AppNode } from "./nodes/types"
+import { TaskNode } from "./nodes/TaskNode"
 
 export default function Projects() {
   const [nodes, setNodes] = useNodesState(initialNodes)
@@ -33,7 +34,7 @@ export default function Projects() {
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
       // console.log(changes, "onNodesChange")
-      setNodes((nds) => applyNodeChanges(changes, nds) as AppNode[])
+      setNodes((nds) => applyNodeChanges(changes, nds) as TaskNode[])
     },
     [setNodes]
   )
