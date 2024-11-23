@@ -8,6 +8,10 @@ import {
   useNodesState,
   useEdgesState,
   type OnConnect,
+  applyNodeChanges,
+  applyEdgeChanges,
+  EdgeChange,
+  NodeChange,
 } from "@xyflow/react"
 
 // import "@xyflow/react/dist/style.css"
@@ -16,15 +20,31 @@ import "@xyflow/react/dist/base.css"
 import { initialNodes, nodeTypes } from "./nodes"
 import { initialEdges, edgeTypes } from "./edges"
 import { useTheme } from "@/contexts/ThemeProvider"
+import { AppNode } from "./nodes/types"
 
 export default function Projects() {
-  const [nodes, , onNodesChange] = useNodesState(initialNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+  const [nodes, setNodes] = useNodesState(initialNodes)
+  const [edges, setEdges] = useEdgesState(initialEdges)
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
     [setEdges]
   )
-  const { theme } = useTheme() // Add this line
+
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => {
+      // console.log(changes, "onNodesChange")
+      setNodes((nds) => applyNodeChanges(changes, nds) as AppNode[])
+    },
+    [setNodes]
+  )
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange[]) => {
+      // console.log(changes, "onEdgesChange")
+      setEdges((eds) => applyEdgeChanges(changes, eds))
+    },
+    [setEdges]
+  )
+  const { theme } = useTheme()
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
