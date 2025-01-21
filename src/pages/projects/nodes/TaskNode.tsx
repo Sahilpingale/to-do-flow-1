@@ -60,7 +60,7 @@ export function TaskNode({ data, id, isConnectable }: NodeProps<TaskNode>) {
       <div className="flex justify-end">
         <XIcon
           onClick={() => handleDeleteNode(id)}
-          className="h-4 w-4 cursor-pointer hover:text-red-500"
+          className="h-4 w-4 cursor-pointer "
         />
       </div>
       <div className="flex flex-col gap-4">
