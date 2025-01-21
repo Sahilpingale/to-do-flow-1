@@ -3,7 +3,6 @@ import { IProject } from "../../models/models"
 import { useNavigate } from "react-router"
 import { IconTrash, IconSun, IconMoon } from "@tabler/icons-react"
 import { FlipWords } from "../../components/ui/flip-words"
-import { useTheme } from "../../contexts/ThemeProvider"
 import {
   Table,
   TableBody,
@@ -12,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table"
+import { useTheme } from "@/hooks/useTheme"
 
 const getStoredProjects = (): IProject[] => {
   const stored = localStorage.getItem("projects")

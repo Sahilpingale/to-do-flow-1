@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react"
+import React, { createContext, useState, useEffect } from "react"
+import { lightTheme, darkTheme } from "@/lib/themes"
 
 type Theme = "light" | "dark"
 
@@ -7,7 +8,7 @@ interface ThemeContextType {
   toggleTheme: () => void
 }
 
-const ThemeContext = createContext<ThemeContextType>({
+export const ThemeContext = createContext<ThemeContextType>({
   theme: "light",
   toggleTheme: () => {},
 })
@@ -26,6 +27,15 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     }
   }, [])
 
+  useEffect(() => {
+    const root = document.documentElement
+    const themeValues = theme === "light" ? lightTheme : darkTheme
+
+    Object.entries(themeValues).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value)
+    })
+  }, [theme])
+
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light"
     setTheme(newTheme)
@@ -34,14 +44,9 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <div
-        style={{ width: "100%", height: "100vh" }}
-        className={theme === "dark" ? "dark" : ""}
-      >
+      <div className={`${theme === "dark" ? "dark" : ""} h-full`}>
         {children}
       </div>
     </ThemeContext.Provider>
   )
 }
-
-export const useTheme = () => useContext(ThemeContext)

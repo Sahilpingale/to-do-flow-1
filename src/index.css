@@ -6,6 +6,11 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  /* Light theme defaults */
+  --node-background: theme(colors.white);
+  --node-border: theme(colors.neutral.200);
+  --node-input: theme(colors.white);
+  --node-input-foreground: theme(colors.neutral.900);
 }
 
 html,
@@ -68,6 +73,11 @@ body,
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    /* Dark theme node colors */
+    --node-background: theme(colors.neutral.900);
+    --node-border: theme(colors.neutral.700);
+    --node-input: theme(colors.neutral.800);
+    --node-input-foreground: theme(colors.neutral.100);
   }
 }
 
@@ -84,4 +94,13 @@ body,
   width: 100%;
   height: 100vh;
   position: relative;
+}
+
+.node-background {
+  background-color: var(--node-background);
+}
+
+.node-input {
+  background-color: var(--node-input);
+  color: var(--node-input-foreground);
 }

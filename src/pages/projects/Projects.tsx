@@ -12,6 +12,8 @@ import {
   applyEdgeChanges,
   EdgeChange,
   NodeChange,
+  Panel,
+  ControlButton,
 } from "@xyflow/react"
 
 // import "@xyflow/react/dist/style.css"
@@ -19,13 +21,19 @@ import "@xyflow/react/dist/base.css"
 
 import { initialNodes, nodeTypes } from "./nodes"
 import { initialEdges, edgeTypes } from "./edges"
-import { useTheme } from "@/contexts/ThemeProvider"
-import { AppNode } from "./nodes/types"
+// import { AppNode } from "./nodes/types"
 import { TaskNode } from "./nodes/TaskNode"
+import { useTheme } from "@/hooks/useTheme"
+import { Button } from "@/components/ui/button"
+import { EyeIcon, MoonIcon, SunIcon } from "lucide-react"
+import { TaskStatus } from "@/models/models"
 
 export default function Projects() {
+  const { toggleTheme } = useTheme()
+
   const [nodes, setNodes] = useNodesState(initialNodes)
   const [edges, setEdges] = useEdgesState(initialEdges)
+
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
     [setEdges]
@@ -47,6 +55,21 @@ export default function Projects() {
   )
   const { theme } = useTheme()
 
+  // Add new function to handle node creation
+  const handleAddNode = () => {
+    const newNode: TaskNode = {
+      id: `task-${nodes.length + 1}`,
+      type: "task",
+      position: { x: Math.random() * 500, y: Math.random() * 500 },
+      data: {
+        title: "",
+        description: "",
+        status: TaskStatus.TODO,
+      },
+    }
+    setNodes((nds) => [...nds, newNode])
+  }
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <ReactFlow
@@ -59,10 +82,23 @@ export default function Projects() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
+        deleteKeyCode={null} // Disable default delete behavior
       >
         <Background />
-        <MiniMap />
-        <Controls />
+        <MiniMap position="bottom-left" />
+        <Controls position="top-right">
+          <ControlButton onClick={toggleTheme}>
+            {/* if theme is dark, show sun icon, otherwise show moon icon */}
+            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+          </ControlButton>
+        </Controls>
+
+        {/* Use Panel component instead of div for floating elements */}
+        <Panel position="bottom-right" className="p-4">
+          <Button size="lg" variant="outline" onClick={handleAddNode}>
+            Add Task
+          </Button>
+        </Panel>
       </ReactFlow>
     </div>
   )
