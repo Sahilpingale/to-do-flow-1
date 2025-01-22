@@ -6,20 +6,26 @@ import { TaskStatus } from "@/models/models"
 // import { AppNode } from "./types"
 
 export const initialNodes: TaskNode[] = [
-  // { id: "a", type: "input", position: { x: 0, y: 0 }, data: { label: "wire" } },
-  // {
-  //   id: "b",
-  //   type: "position-logger",
-  //   position: { x: -100, y: 100 },
-  //   data: { label: "drag me!" },
-  // },
-  // { id: "c", position: { x: 100, y: 100 }, data: { label: "your ideas" } },
-  // {
-  //   id: "d",
-  //   type: "output",
-  //   position: { x: 0, y: 200 },
-  //   data: { label: "with React Flow" },
-  // },
+  {
+    id: "1",
+    type: "task",
+    data: {
+      description: "description 1",
+      title: "title 1",
+      status: TaskStatus.TODO,
+    },
+    position: { x: 0, y: 0 },
+  },
+  {
+    id: "2",
+    type: "task",
+    data: {
+      description: "description 2",
+      title: "title 2",
+      status: TaskStatus.TODO,
+    },
+    position: { x: 250, y: 100 },
+  },
 ]
 
 export const nodeTypes = {

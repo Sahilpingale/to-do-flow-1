@@ -13,12 +13,12 @@ import {
 } from "../../components/ui/table"
 import { useTheme } from "@/hooks/useTheme"
 
-const getStoredProjects = (): IProject[] => {
-  const stored = localStorage.getItem("projects")
-  if (!stored) return []
+const getAllProjects = (): IProject[] => {
+  const localStorageProjects = localStorage.getItem("projects")
+  if (!localStorageProjects) return []
 
-  const projects = JSON.parse(stored)
-  return projects.map((project: IProject) => ({
+  const parsedProjects = JSON.parse(localStorageProjects)
+  return parsedProjects.map((project: IProject) => ({
     ...project,
     createdAt: new Date(project.createdAt),
     updatedAt: new Date(project.updatedAt),
@@ -26,7 +26,7 @@ const getStoredProjects = (): IProject[] => {
 }
 
 const Home = () => {
-  const [projects, setProjects] = useState<IProject[]>(getStoredProjects())
+  const [projects, setProjects] = useState<IProject[]>(getAllProjects())
   const navigate = useNavigate()
   const { toggleTheme } = useTheme()
 
@@ -36,7 +36,7 @@ const Home = () => {
       name: `Project ${projects.length + 1}`,
       createdAt: new Date(),
       updatedAt: new Date(),
-      tasks: [],
+      // tasks: [],
     }
 
     const updatedProjects = [...projects, newProject]

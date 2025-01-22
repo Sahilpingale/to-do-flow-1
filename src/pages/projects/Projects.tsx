@@ -1,4 +1,4 @@
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import {
   ReactFlow,
   Background,
@@ -25,17 +25,36 @@ import { initialEdges, edgeTypes } from "./edges"
 import { TaskNode } from "./nodes/TaskNode"
 import { useTheme } from "@/hooks/useTheme"
 import { Button } from "@/components/ui/button"
-import { EyeIcon, MoonIcon, SunIcon } from "lucide-react"
-import { TaskStatus } from "@/models/models"
+import { MoonIcon, SunIcon } from "lucide-react"
+import { IProject, TaskStatus } from "@/models/models"
+import { useParams } from "react-router-dom"
 
 export default function Projects() {
+  const { id } = useParams()
   const { toggleTheme } = useTheme()
 
   const [nodes, setNodes] = useNodesState(initialNodes)
   const [edges, setEdges] = useEdgesState(initialEdges)
 
+  // console.log("nodes !!!", nodes)
+  // console.log("edges !!!", edges)
+
+  // fetch project from local storage
+  const getProjectById = (): IProject | undefined => {
+    const localStorageProjects = localStorage.getItem("projects")
+    if (!localStorageProjects) return undefined
+
+    const parsedProjects = JSON.parse(localStorageProjects)
+    return parsedProjects.find((project: IProject) => project.id === id)
+  }
+
+  const [project, setProject] = useState<IProject | undefined>(getProjectById())
+
   const onConnect: OnConnect = useCallback(
-    (connection) => setEdges((edges) => addEdge(connection, edges)),
+    (connection) => {
+      // console.log(connection, "onConnect")
+      setEdges((edges) => addEdge(connection, edges))
+    },
     [setEdges]
   )
 
@@ -82,7 +101,6 @@ export default function Projects() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
-        deleteKeyCode={null} // Disable default delete behavior
       >
         <Background />
         <MiniMap position="bottom-left" />

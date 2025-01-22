@@ -1,5 +1,6 @@
 // import { useCallback } from "react"
 import {
+  Edge,
   //   applyNodeChanges,
   Handle,
   Node,
@@ -18,7 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { TaskStatus } from "@/models/models"
-import { useTheme } from "@/hooks/useTheme"
 import { XIcon } from "lucide-react"
 
 // add id to the node
@@ -32,6 +32,11 @@ export interface TaskNode extends Node<Record<string, unknown>, string> {
   id: string
 }
 
+export interface TaskEdge extends Edge {
+  source: string
+  target: string
+}
+
 const statusTranslation = {
   [TaskStatus.TODO]: "Todo",
   [TaskStatus.IN_PROGRESS]: "In progress",
@@ -39,24 +44,50 @@ const statusTranslation = {
 }
 
 export function TaskNode({ data, id, isConnectable }: NodeProps<TaskNode>) {
-  const { theme } = useTheme()
-  const { deleteElements } = useReactFlow()
-
-  //   const onChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
-  //     console.log(evt.target.value)
-  //   }, [])
+  const { deleteElements, setNodes } = useReactFlow()
 
   const handleDeleteNode = (nodeId: string) => {
     deleteElements({ nodes: [{ id: nodeId }] })
   }
 
+  const handleInputChange =
+    (field: keyof TaskNode["data"]) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                [field]: event.target.value,
+              },
+            }
+          }
+          return node
+        })
+      )
+    }
+
+  const handleStatusChange = (value: TaskStatus) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === id) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              status: value,
+            },
+          }
+        }
+        return node
+      })
+    )
+  }
+
   return (
     <div className="border rounded-md p-4 node-background">
-      {/* <Handle
-        type="target"
-        position={Position.Top}
-        isConnectable={isConnectable}
-      /> */}
       <div className="flex justify-end">
         <XIcon
           onClick={() => handleDeleteNode(id)}
@@ -69,7 +100,7 @@ export function TaskNode({ data, id, isConnectable }: NodeProps<TaskNode>) {
           <Input
             id="title"
             value={data.title}
-            onChange={(e) => console.log("onChange", e.target.value)}
+            onChange={handleInputChange("title")}
             className="node-input"
             placeholder="Add a title"
           />
@@ -79,7 +110,7 @@ export function TaskNode({ data, id, isConnectable }: NodeProps<TaskNode>) {
           <Input
             id="description"
             value={data.description}
-            onChange={(e) => console.log("onChange", e.target.value)}
+            onChange={handleInputChange("description")}
             className="node-input"
             placeholder="Add a description"
           />
@@ -95,7 +126,9 @@ export function TaskNode({ data, id, isConnectable }: NodeProps<TaskNode>) {
             <DropdownMenuContent className="w-56">
               <DropdownMenuRadioGroup
                 value={data.status}
-                onValueChange={(value) => console.log("onValueChange", value)}
+                onValueChange={(value) =>
+                  handleStatusChange(value as TaskStatus)
+                }
               >
                 <DropdownMenuRadioItem value={TaskStatus.TODO}>
                   {statusTranslation[TaskStatus.TODO]}
@@ -111,17 +144,16 @@ export function TaskNode({ data, id, isConnectable }: NodeProps<TaskNode>) {
           </DropdownMenu>
         </div>
       </div>
-      {/* <Handle
-        type="source"
-        position={Position.Bottom}
-        id="a"
-        style={handleStyle}
+      <Handle
+        type="target"
+        position={Position.Left}
+        // id="b"
         isConnectable={isConnectable}
-      /> */}
+      />
       <Handle
         type="source"
-        position={Position.Bottom}
-        id="b"
+        position={Position.Right}
+        // id="b"
         isConnectable={isConnectable}
       />
     </div>

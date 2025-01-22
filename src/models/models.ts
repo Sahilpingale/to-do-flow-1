@@ -9,7 +9,7 @@ export interface IProject {
   name: string
   createdAt: Date
   updatedAt: Date
-  tasks: ITask[]
+  // tasks: ITask[]
 }
 
 export interface ITask {
