@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useCallback } from "react"
 import {
   ReactFlow,
   Background,
@@ -15,64 +15,98 @@ import {
   Panel,
   ControlButton,
 } from "@xyflow/react"
-
-// import "@xyflow/react/dist/style.css"
 import "@xyflow/react/dist/base.css"
 
-import { initialNodes, nodeTypes } from "./nodes"
-import { initialEdges, edgeTypes } from "./edges"
-// import { AppNode } from "./nodes/types"
+import { nodeTypes } from "./nodes"
+import { edgeTypes } from "./edges"
 import { TaskNode } from "./nodes/TaskNode"
 import { useTheme } from "@/hooks/useTheme"
 import { Button } from "@/components/ui/button"
 import { MoonIcon, SunIcon } from "lucide-react"
 import { IProject, TaskStatus } from "@/models/models"
 import { useParams } from "react-router-dom"
+import { useDebounce } from "@/hooks/useDebounce"
+
+const getProjectById = (id?: string): IProject | undefined => {
+  if (!id) return undefined
+  const localStorageProjects = localStorage.getItem("projects")
+  if (!localStorageProjects) return undefined
+
+  const parsedProjects = JSON.parse(localStorageProjects)
+  const project = parsedProjects.find((project: IProject) => project.id === id)
+
+  if (project) {
+    return {
+      ...project,
+      createdAt: new Date(project.createdAt),
+      updatedAt: new Date(project.updatedAt),
+    }
+  }
+  return undefined
+}
 
 export default function Projects() {
   const { id } = useParams()
-  const { toggleTheme } = useTheme()
+  const { toggleTheme, theme } = useTheme()
 
-  const [nodes, setNodes] = useNodesState(initialNodes)
-  const [edges, setEdges] = useEdgesState(initialEdges)
+  // const [project, setProject] = useState<IProject | undefined>(
+  //   getProjectById(id)
+  // )
 
-  // console.log("nodes !!!", nodes)
-  // console.log("edges !!!", edges)
+  // Initialize nodes and edges from project or use defaults
+  const [nodes, setNodes] = useNodesState(getProjectById(id)?.nodes || [])
+  const [edges, setEdges] = useEdgesState(getProjectById(id)?.edges || [])
 
-  // fetch project from local storage
-  const getProjectById = (): IProject | undefined => {
+  // Function to save project changes
+  const saveProjectChanges = useCallback(() => {
+    if (!id) return
+
     const localStorageProjects = localStorage.getItem("projects")
-    if (!localStorageProjects) return undefined
+    if (!localStorageProjects) return
 
     const parsedProjects = JSON.parse(localStorageProjects)
-    return parsedProjects.find((project: IProject) => project.id === id)
-  }
+    const updatedProjects = parsedProjects.map((p: IProject) => {
+      if (p.id === id) {
+        return {
+          ...p,
+          nodes,
+          edges,
+          updatedAt: new Date(),
+        }
+      }
+      return p
+    })
 
-  const [project, setProject] = useState<IProject | undefined>(getProjectById())
+    localStorage.setItem("projects", JSON.stringify(updatedProjects))
+  }, [id, nodes, edges])
 
-  const onConnect: OnConnect = useCallback(
-    (connection) => {
-      // console.log(connection, "onConnect")
-      setEdges((edges) => addEdge(connection, edges))
-    },
-    [setEdges]
+  // Use debounce hook for saving changes
+  useDebounce(
+    { nodes, edges },
+    () => saveProjectChanges(),
+    1000 // 1 second delay
   )
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      // console.log(changes, "onNodesChange")
       setNodes((nds) => applyNodeChanges(changes, nds) as TaskNode[])
     },
     [setNodes]
   )
+
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
-      // console.log(changes, "onEdgesChange")
       setEdges((eds) => applyEdgeChanges(changes, eds))
     },
     [setEdges]
   )
-  const { theme } = useTheme()
+
+  const onConnect: OnConnect = useCallback(
+    (connection) => {
+      setEdges((edges) => addEdge(connection, edges))
+    },
+    [setEdges]
+  )
 
   // Add new function to handle node creation
   const handleAddNode = () => {

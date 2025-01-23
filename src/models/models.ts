@@ -1,3 +1,5 @@
+import TaskNode, { TaskEdge } from "@/pages/projects/nodes/TaskNode"
+
 export enum TaskStatus {
   TODO = "TODO",
   IN_PROGRESS = "IN_PROGRESS",
@@ -9,7 +11,8 @@ export interface IProject {
   name: string
   createdAt: Date
   updatedAt: Date
-  // tasks: ITask[]
+  nodes: TaskNode[]
+  edges: TaskEdge[]
 }
 
 export interface ITask {

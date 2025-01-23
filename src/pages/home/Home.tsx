@@ -36,7 +36,8 @@ const Home = () => {
       name: `Project ${projects.length + 1}`,
       createdAt: new Date(),
       updatedAt: new Date(),
-      // tasks: [],
+      edges: [],
+      nodes: [],
     }
 
     const updatedProjects = [...projects, newProject]
