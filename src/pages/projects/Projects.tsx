@@ -19,11 +19,16 @@ import "@xyflow/react/dist/base.css"
 
 import { nodeTypes } from "./nodes"
 import { edgeTypes } from "./edges"
-import { TaskNode } from "./nodes/TaskNode"
 import { useTheme } from "@/hooks/useTheme"
 import { Button } from "@/components/ui/button"
 import { MoonIcon, SunIcon } from "lucide-react"
-import { IProject, TaskStatus } from "@/models/models"
+import {
+  IProject,
+  TaskEdge,
+  TaskNode,
+  TaskNodeType,
+  TaskStatus,
+} from "@/models/models"
 import { useParams } from "react-router-dom"
 import { useDebounce } from "@/hooks/useDebounce"
 
@@ -96,7 +101,7 @@ export default function Projects() {
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
-      setEdges((eds) => applyEdgeChanges(changes, eds))
+      setEdges((eds) => applyEdgeChanges(changes, eds) as TaskEdge[])
     },
     [setEdges]
   )
@@ -112,7 +117,7 @@ export default function Projects() {
   const handleAddNode = () => {
     const newNode: TaskNode = {
       id: `task-${nodes.length + 1}`,
-      type: "task",
+      type: TaskNodeType.TASK,
       position: { x: Math.random() * 500, y: Math.random() * 500 },
       data: {
         title: "",

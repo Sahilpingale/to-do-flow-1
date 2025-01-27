@@ -1,13 +1,4 @@
-// import { useCallback } from "react"
-import {
-  Edge,
-  //   applyNodeChanges,
-  Handle,
-  Node,
-  NodeProps,
-  Position,
-  useReactFlow,
-} from "@xyflow/react"
+import { Handle, NodeProps, Position, useReactFlow, Node } from "@xyflow/react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -18,24 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
+import type { TaskNode } from "@/models/models"
 import { TaskStatus } from "@/models/models"
 import { XIcon } from "lucide-react"
-
-// add id to the node
-
-export interface TaskNode extends Node<Record<string, unknown>, string> {
-  data: {
-    title: string
-    description: string
-    status: TaskStatus
-  }
-  id: string
-}
-
-export interface TaskEdge extends Edge {
-  source: string
-  target: string
-}
 
 const statusTranslation = {
   [TaskStatus.TODO]: "Todo",
@@ -43,7 +19,10 @@ const statusTranslation = {
   [TaskStatus.DONE]: "Done",
 }
 
-export function TaskNode({ data, id, isConnectable }: NodeProps<TaskNode>) {
+type TaskNodeProps = NodeProps<Node<Pick<TaskNode, "data">["data"]>>
+
+export function TaskNodeComponent(props: TaskNodeProps) {
+  const { data, id, isConnectable } = props
   const { deleteElements, setNodes } = useReactFlow()
 
   const handleDeleteNode = (nodeId: string) => {
@@ -160,4 +139,4 @@ export function TaskNode({ data, id, isConnectable }: NodeProps<TaskNode>) {
   )
 }
 
-export default TaskNode
+export default TaskNodeComponent
