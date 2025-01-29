@@ -28,7 +28,8 @@
     "react-router-dom": "^7.0.1",
     "simplex-noise": "^4.0.3",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^11.0.5"
   },
   "license": "MIT",
   "devDependencies": {
