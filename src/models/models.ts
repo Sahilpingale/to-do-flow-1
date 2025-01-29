@@ -40,13 +40,3 @@ export interface TaskEdge {
   deletable: boolean
   reconnectable: boolean
 }
-
-export interface ITask {
-  id: string
-  name: string
-  description: string
-  subTasks: ITask[]
-  status: TaskStatus
-  createdAt: Date
-  updatedAt: Date
-}

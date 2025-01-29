@@ -1,0 +1,7 @@
+{
+  "withSeparateModelsAndApi": false,
+  "npmVersion": "1.0.0",
+  "supportsES6": true,
+  "apiNameSuffix": "ToDoFlow",
+  "npmName": "todo-flow-client"
+}
