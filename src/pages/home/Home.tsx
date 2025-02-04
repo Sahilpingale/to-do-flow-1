@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { IProject } from "../../models/models"
+import { useEffect, useState } from "react"
+
 import { useNavigate } from "react-router"
 import { IconTrash, IconSun, IconMoon } from "@tabler/icons-react"
 import { FlipWords } from "../../components/ui/flip-words"
@@ -12,43 +12,59 @@ import {
   TableRow,
 } from "../../components/ui/table"
 import { useTheme } from "@/hooks/useTheme"
-
-const getAllProjects = (): IProject[] => {
-  const localStorageProjects = localStorage.getItem("projects")
-  if (!localStorageProjects) return []
-
-  const parsedProjects = JSON.parse(localStorageProjects)
-  return parsedProjects.map((project: IProject) => ({
-    ...project,
-    createdAt: new Date(project.createdAt),
-    updatedAt: new Date(project.updatedAt),
-  }))
-}
+import { apiClient } from "@/lib/api"
+import { Project } from "api/api"
 
 const Home = () => {
-  const [projects, setProjects] = useState<IProject[]>(getAllProjects())
+  const [projects, setProjects] = useState<Project[]>([])
   const navigate = useNavigate()
   const { toggleTheme } = useTheme()
 
-  const handleCreateProject = () => {
-    const newProject: IProject = {
-      id: crypto.randomUUID(),
-      name: `Project ${projects.length + 1}`,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      edges: [],
-      nodes: [],
+  // Fetch projects on component mount
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await apiClient.projectsGet()
+        const fetchedProjects = response.data.map((project) => ({
+          ...project,
+          createdAt: project.createdAt ?? "",
+          updatedAt: project.updatedAt ?? "",
+        }))
+        console.log(fetchedProjects)
+        setProjects(fetchedProjects)
+      } catch (error) {
+        console.error("Failed to fetch projects:", error)
+      }
     }
 
-    const updatedProjects = [...projects, newProject]
-    setProjects(updatedProjects)
-    localStorage.setItem("projects", JSON.stringify(updatedProjects))
+    fetchProjects()
+  }, [])
+
+  const handleCreateProject = async () => {
+    try {
+      const response = await apiClient.projectsPost({
+        name: `Project ${projects.length + 1}`,
+      })
+
+      const newProject = {
+        ...response.data,
+        createdAt: response.data.createdAt ?? "",
+        updatedAt: response.data.updatedAt ?? "",
+      }
+
+      setProjects((prev) => [...prev, newProject as Project])
+    } catch (error) {
+      console.error("Failed to create project:", error)
+    }
   }
 
-  const handleDeleteProject = (id: string) => {
-    const updatedProjects = projects.filter((project) => project.id !== id)
-    setProjects(updatedProjects)
-    localStorage.setItem("projects", JSON.stringify(updatedProjects))
+  const handleDeleteProject = async (id: string) => {
+    try {
+      await apiClient.projectsIdDelete(id)
+      setProjects((prev) => prev.filter((project) => project.id !== id))
+    } catch (error) {
+      console.error("Failed to delete project:", error)
+    }
   }
 
   return (
@@ -123,16 +139,20 @@ const Home = () => {
                       {project.name}
                     </TableCell>
                     <TableCell>
-                      {project.createdAt.toLocaleDateString()}
+                      {project.createdAt
+                        ? new Date(project.createdAt).toLocaleDateString()
+                        : ""}
                     </TableCell>
                     <TableCell>
-                      {project.updatedAt.toLocaleDateString()}
+                      {project.updatedAt
+                        ? new Date(project.updatedAt).toLocaleDateString()
+                        : ""}
                     </TableCell>
                     <TableCell className="delete-cell">
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
-                          handleDeleteProject(project.id)
+                          handleDeleteProject(project.id!)
                         }}
                         className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
                       >

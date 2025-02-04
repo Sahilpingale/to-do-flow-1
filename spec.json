@@ -190,6 +190,34 @@
             "description": "Internal server error"
           }
         }
+      },
+      "delete": {
+        "summary": "Delete a project",
+        "description": "Deletes a project by ID.",
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Project deleted successfully"
+          },
+          "404": {
+            "description": "Project not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
       }
     }
   },
