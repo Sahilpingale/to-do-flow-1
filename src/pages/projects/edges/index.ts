@@ -1,5 +1,5 @@
 import type { EdgeTypes } from "@xyflow/react"
-import type { TaskEdge } from "@/models/models"
+import type { TaskEdge } from "api"
 
 export const initialEdges: TaskEdge[] = []
 

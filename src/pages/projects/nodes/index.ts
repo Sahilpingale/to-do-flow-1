@@ -1,12 +1,12 @@
 import type { NodeTypes } from "@xyflow/react"
 
 import { PositionLoggerNode } from "./PositionLoggerNode"
-import { type TaskNode } from "@/models/models"
+import type { TaskNode } from "api"
 import { TaskNodeComponent } from "./TaskNode"
 
 export const initialNodes: TaskNode[] = []
 
 export const nodeTypes = {
   "position-logger": PositionLoggerNode,
-  task: TaskNodeComponent,
+  TASK: TaskNodeComponent,
 } satisfies NodeTypes

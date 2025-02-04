@@ -26,6 +26,19 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @enum {string}
+ */
+
+export const NodeType = {
+    Task: 'TASK'
+} as const;
+
+export type NodeType = typeof NodeType[keyof typeof NodeType];
+
+
+/**
+ * 
+ * @export
  * @interface Project
  */
 export interface Project {
@@ -74,34 +87,103 @@ export interface Project {
 export interface ProjectsIdPatchRequest {
     /**
      * 
-     * @type {Array<TaskNode>}
+     * @type {Array<ProjectsIdPatchRequestNodesToUpdateInner>}
      * @memberof ProjectsIdPatchRequest
      */
-    'nodesToUpdate'?: Array<TaskNode>;
+    'nodesToUpdate'?: Array<ProjectsIdPatchRequestNodesToUpdateInner>;
     /**
      * 
-     * @type {Array<TaskNode>}
+     * @type {Array<ProjectsIdPatchRequestNodesToUpdateInner>}
      * @memberof ProjectsIdPatchRequest
      */
-    'nodesToAdd'?: Array<TaskNode>;
+    'nodesToAdd'?: Array<ProjectsIdPatchRequestNodesToUpdateInner>;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Array<ProjectsIdPatchRequestNodesToRemoveInner>}
      * @memberof ProjectsIdPatchRequest
      */
-    'nodesToRemove'?: Array<string>;
+    'nodesToRemove'?: Array<ProjectsIdPatchRequestNodesToRemoveInner>;
     /**
      * 
-     * @type {Array<TaskEdge>}
+     * @type {Array<ProjectsIdPatchRequestEdgesToAddInner>}
      * @memberof ProjectsIdPatchRequest
      */
-    'edgesToAdd'?: Array<TaskEdge>;
+    'edgesToAdd'?: Array<ProjectsIdPatchRequestEdgesToAddInner>;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Array<ProjectsIdPatchRequestNodesToRemoveInner>}
      * @memberof ProjectsIdPatchRequest
      */
-    'edgesToRemove'?: Array<string>;
+    'edgesToRemove'?: Array<ProjectsIdPatchRequestNodesToRemoveInner>;
+}
+/**
+ * 
+ * @export
+ * @interface ProjectsIdPatchRequestEdgesToAddInner
+ */
+export interface ProjectsIdPatchRequestEdgesToAddInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectsIdPatchRequestEdgesToAddInner
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectsIdPatchRequestEdgesToAddInner
+     */
+    'source'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectsIdPatchRequestEdgesToAddInner
+     */
+    'target'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ProjectsIdPatchRequestNodesToRemoveInner
+ */
+export interface ProjectsIdPatchRequestNodesToRemoveInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectsIdPatchRequestNodesToRemoveInner
+     */
+    'id'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface ProjectsIdPatchRequestNodesToUpdateInner
+ */
+export interface ProjectsIdPatchRequestNodesToUpdateInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectsIdPatchRequestNodesToUpdateInner
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {object}
+     * @memberof ProjectsIdPatchRequestNodesToUpdateInner
+     */
+    'data'?: object;
+    /**
+     * 
+     * @type {object}
+     * @memberof ProjectsIdPatchRequestNodesToUpdateInner
+     */
+    'position'?: object;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectsIdPatchRequestNodesToUpdateInner
+     */
+    'type'?: string;
 }
 /**
  * 
@@ -142,10 +224,10 @@ export interface TaskEdge {
     'target'?: string;
     /**
      * 
-     * @type {string}
+     * @type {NodeType}
      * @memberof TaskEdge
      */
-    'type'?: string;
+    'type'?: NodeType;
     /**
      * 
      * @type {boolean}
@@ -165,6 +247,8 @@ export interface TaskEdge {
      */
     'reconnectable'?: boolean;
 }
+
+
 /**
  * 
  * @export
@@ -179,49 +263,85 @@ export interface TaskNode {
     'id'?: string;
     /**
      * 
-     * @type {string}
+     * @type {TaskNodeData}
      * @memberof TaskNode
+     */
+    'data'?: TaskNodeData;
+    /**
+     * 
+     * @type {TaskNodePosition}
+     * @memberof TaskNode
+     */
+    'position'?: TaskNodePosition;
+    /**
+     * 
+     * @type {NodeType}
+     * @memberof TaskNode
+     */
+    'type'?: NodeType;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface TaskNodeData
+ */
+export interface TaskNodeData {
+    /**
+     * 
+     * @type {string}
+     * @memberof TaskNodeData
      */
     'title'?: string;
     /**
      * 
      * @type {string}
-     * @memberof TaskNode
+     * @memberof TaskNodeData
      */
     'description'?: string;
     /**
      * 
-     * @type {string}
-     * @memberof TaskNode
+     * @type {TaskStatus}
+     * @memberof TaskNodeData
      */
-    'status'?: TaskNodeStatusEnum;
-    /**
-     * 
-     * @type {number}
-     * @memberof TaskNode
-     */
-    'positionX'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TaskNode
-     */
-    'positionY'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof TaskNode
-     */
-    'type'?: string;
+    'status'?: TaskStatus;
 }
 
-export const TaskNodeStatusEnum = {
+
+/**
+ * 
+ * @export
+ * @interface TaskNodePosition
+ */
+export interface TaskNodePosition {
+    /**
+     * 
+     * @type {number}
+     * @memberof TaskNodePosition
+     */
+    'x'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TaskNodePosition
+     */
+    'y'?: number;
+}
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const TaskStatus = {
     Todo: 'TODO',
     InProgress: 'IN_PROGRESS',
     Done: 'DONE'
 } as const;
 
-export type TaskNodeStatusEnum = typeof TaskNodeStatusEnum[keyof typeof TaskNodeStatusEnum];
+export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus];
+
 
 
 /**
