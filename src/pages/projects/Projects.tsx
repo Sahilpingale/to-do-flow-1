@@ -1,4 +1,4 @@
-import { useCallback } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   ReactFlow,
   Background,
@@ -24,72 +24,99 @@ import { useTheme } from "@/hooks/useTheme"
 import { Button } from "@/components/ui/button"
 import { MoonIcon, SunIcon } from "lucide-react"
 import {
-  IProject,
+  Project,
   TaskEdge,
   TaskNode,
-  TaskNodeType,
+  NodeType,
   TaskStatus,
-} from "@/models/models"
+  ProjectsIdPatchRequest,
+} from "api/api"
 import { useParams } from "react-router-dom"
 import { useDebounce } from "@/hooks/useDebounce"
+import { FlowTaskNode, FlowTaskEdge } from "@/types/flow"
+import { apiClient } from "@/lib/api"
 
-const getProjectById = (id?: string): IProject | undefined => {
-  if (!id) return undefined
-  const localStorageProjects = localStorage.getItem("projects")
-  if (!localStorageProjects) return undefined
+// const getProjectById = (id: string): Project | undefined => {
+//   if (!id) return undefined
+//   const localStorageProjects = localStorage.getItem("projects")
+//   if (!localStorageProjects) return undefined
+//   const parsedProjects = JSON.parse(localStorageProjects || "[]")
+//   const project = parsedProjects.find((project: Project) => project.id === id)
 
-  const parsedProjects = JSON.parse(localStorageProjects)
-  const project = parsedProjects.find((project: IProject) => project.id === id)
-
-  if (project) {
-    return {
-      ...project,
-      createdAt: new Date(project.createdAt),
-      updatedAt: new Date(project.updatedAt),
-    }
-  }
-  return undefined
-}
+//   if (project) {
+//     return {
+//       ...project,
+//       createdAt: new Date(project.createdAt),
+//       updatedAt: new Date(project.updatedAt),
+//     }
+//   }
+// }
 
 export default function Projects() {
   const { id } = useParams()
   const { toggleTheme, theme } = useTheme()
+  const [project, setProject] = useState<Project>()
 
-  const [nodes, setNodes] = useNodesState(getProjectById(id)?.nodes || [])
-  const [edges, setEdges] = useEdgesState(getProjectById(id)?.edges || [])
+  const [nodes, setNodes] = useNodesState<FlowTaskNode>(
+    (project?.nodes as FlowTaskNode[]) || []
+  )
+  const [edges, setEdges] = useEdgesState<FlowTaskEdge>(
+    (project?.edges as FlowTaskEdge[]) || []
+  )
+  const [isLoading, setIsLoading] = useState(true)
 
-  const saveProjectChanges = useCallback(() => {
+  useEffect(() => {
+    const fetchProject = async () => {
+      setIsLoading(true)
+      try {
+        const response = await apiClient.projectsIdGet(id!)
+        setProject(response.data)
+        setNodes((response.data.nodes as FlowTaskNode[]) || [])
+        setEdges((response.data.edges as FlowTaskEdge[]) || [])
+      } catch (error) {
+        console.error("Failed to fetch project:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchProject()
+  }, [id, setNodes, setEdges])
+
+  const saveProjectChanges = useCallback(async () => {
     if (!id) return
 
-    const localStorageProjects = localStorage.getItem("projects")
-    if (!localStorageProjects) return
+    // const localStorageProjects = localStorage.getItem("projects")
+    // if (!localStorageProjects) {
+    //   return
+    // }
 
-    const parsedProjects = JSON.parse(localStorageProjects)
-    const currentProject = parsedProjects.find((p: IProject) => p.id === id)
+    // const parsedProjects = JSON.parse(localStorageProjects)
+    // const currentProject = parsedProjects.find((p: Project) => p.id === id)
 
     const nodesToAdd: TaskNode[] = nodes.filter(
-      (node) => !currentProject.nodes.some((n: TaskNode) => n.id === node.id)
+      (node) => !project?.nodes?.some((n: TaskNode) => n.id === node.id)
     )
 
-    const nodesToDelete: TaskNode[] = currentProject.nodes.filter(
-      (node: TaskNode) => !nodes.some((n) => n.id === node.id)
-    )
+    const nodesToDelete: TaskNode[] =
+      project?.nodes?.filter(
+        (node: TaskNode) => !nodes.some((n) => n.id === node.id)
+      ) || []
 
     const nodesToChange: TaskNode[] = nodes.filter((node) => {
-      const existingNode = currentProject.nodes.find(
+      const existingNode = project?.nodes?.find(
         (n: TaskNode) => n.id === node.id
       )
       if (!existingNode) return false
 
       // Check all properties for changes
       const hasDataChanges =
-        node.data.title !== existingNode.data.title ||
-        node.data.description !== existingNode.data.description ||
-        node.data.status !== existingNode.data.status
+        node.data?.title !== existingNode.data?.title ||
+        node.data?.description !== existingNode.data?.description ||
+        node.data?.status !== existingNode.data?.status
 
       const hasPositionChanges =
-        node.position.x !== existingNode.position.x ||
-        node.position.y !== existingNode.position.y
+        node.position?.x !== existingNode.position?.x ||
+        node.position?.y !== existingNode.position?.y
 
       const hasTypeChange = node.type !== existingNode.type
 
@@ -97,24 +124,25 @@ export default function Projects() {
     })
 
     const edgesToAdd: TaskEdge[] = edges.filter(
-      (edge) => !currentProject.edges.some((e: TaskEdge) => e.id === edge.id)
+      (edge) => !project?.edges?.some((e: TaskEdge) => e.id === edge.id)
     )
 
-    const edgesToDelete: TaskEdge[] = currentProject.edges.filter(
-      (edge: TaskEdge) => !edges.some((e) => e.id === edge.id)
-    )
+    const edgesToDelete: TaskEdge[] =
+      project?.edges?.filter(
+        (edge: TaskEdge) => !edges.some((e) => e.id === edge.id)
+      ) || []
 
-    const updatedProjects = parsedProjects.map((p: IProject) => {
-      if (p.id === id) {
-        return {
-          ...p,
-          nodes,
-          edges,
-          updatedAt: new Date(),
-        }
-      }
-      return p
-    })
+    // const updatedProjects = parsedProjects.map((p: Project) => {
+    //   if (p.id === id) {
+    //     return {
+    //       ...p,
+    //       nodes,
+    //       edges,
+    //       updatedAt: new Date(),
+    //     }
+    //   }
+    //   return p
+    // })
 
     console.log("Nodes to Add:", nodesToAdd)
     console.log(
@@ -128,8 +156,18 @@ export default function Projects() {
       edgesToDelete.map((e) => e.id)
     )
 
-    localStorage.setItem("projects", JSON.stringify(updatedProjects))
-  }, [id, nodes, edges])
+    const request: ProjectsIdPatchRequest = {
+      edgesToAdd: edgesToAdd,
+      edgesToRemove: edgesToDelete,
+      nodesToRemove: nodesToDelete,
+      nodesToUpdate: nodesToChange,
+      nodesToAdd: nodesToAdd,
+    }
+
+    await apiClient.projectsIdPatch(id!, request)
+
+    // localStorage.setItem("projects", JSON.stringify(updatedProjects))
+  }, [id, nodes, edges, project])
 
   // Use debounce hook for saving changes
   useDebounce(
@@ -140,14 +178,14 @@ export default function Projects() {
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      setNodes((nds) => applyNodeChanges(changes, nds) as TaskNode[])
+      setNodes((nds) => applyNodeChanges(changes, nds) as FlowTaskNode[])
     },
     [setNodes]
   )
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
-      setEdges((eds) => applyEdgeChanges(changes, eds) as TaskEdge[])
+      setEdges((eds) => applyEdgeChanges(changes, eds) as FlowTaskEdge[])
     },
     [setEdges]
   )
@@ -161,17 +199,21 @@ export default function Projects() {
 
   // Add new function to handle node creation
   const handleAddNode = () => {
-    const newNode: TaskNode = {
+    const newNode: FlowTaskNode = {
       id: uuidv4(),
-      type: TaskNodeType.TASK,
+      type: NodeType.Task,
       position: { x: Math.random() * 500, y: Math.random() * 500 },
       data: {
         title: "",
         description: "",
-        status: TaskStatus.TODO,
+        status: TaskStatus.Todo,
       },
     }
     setNodes((nds) => [...nds, newNode])
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
   return (

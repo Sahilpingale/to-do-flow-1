@@ -9,17 +9,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import type { TaskNode } from "@/models/models"
-import { TaskStatus } from "@/models/models"
+import { TaskNodeData, TaskStatus } from "api"
 import { XIcon } from "lucide-react"
 
 const statusTranslation = {
-  [TaskStatus.TODO]: "Todo",
-  [TaskStatus.IN_PROGRESS]: "In progress",
-  [TaskStatus.DONE]: "Done",
+  [TaskStatus.Todo]: "Todo",
+  [TaskStatus.InProgress]: "In progress",
+  [TaskStatus.Done]: "Done",
 }
 
-type TaskNodeProps = NodeProps<Node<Pick<TaskNode, "data">["data"]>>
+type TaskNodeProps = NodeProps<
+  Node<Pick<TaskNodeData, "title" | "description" | "status">>
+>
 
 export function TaskNodeComponent(props: TaskNodeProps) {
   const { data, id, isConnectable } = props
@@ -30,7 +31,7 @@ export function TaskNodeComponent(props: TaskNodeProps) {
   }
 
   const handleInputChange =
-    (field: keyof TaskNode["data"]) =>
+    (field: keyof TaskNodeData) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setNodes((nds) =>
         nds.map((node) => {
@@ -99,7 +100,7 @@ export function TaskNodeComponent(props: TaskNodeProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
-                {statusTranslation[data.status]}
+                {statusTranslation[data.status || TaskStatus.Todo]}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
@@ -109,14 +110,14 @@ export function TaskNodeComponent(props: TaskNodeProps) {
                   handleStatusChange(value as TaskStatus)
                 }
               >
-                <DropdownMenuRadioItem value={TaskStatus.TODO}>
-                  {statusTranslation[TaskStatus.TODO]}
+                <DropdownMenuRadioItem value={TaskStatus.Todo}>
+                  {statusTranslation[TaskStatus.Todo]}
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value={TaskStatus.IN_PROGRESS}>
-                  {statusTranslation[TaskStatus.IN_PROGRESS]}
+                <DropdownMenuRadioItem value={TaskStatus.InProgress}>
+                  {statusTranslation[TaskStatus.InProgress]}
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value={TaskStatus.DONE}>
-                  {statusTranslation[TaskStatus.DONE]}
+                <DropdownMenuRadioItem value={TaskStatus.Done}>
+                  {statusTranslation[TaskStatus.Done]}
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
