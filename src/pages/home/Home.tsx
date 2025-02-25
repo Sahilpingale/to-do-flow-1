@@ -69,7 +69,7 @@ const Home = () => {
     <div className="h-screen w-full dark:bg-black bg-white text-black dark:text-white">
       <div className="flex px-8 py-4 justify-between">
         <h1 className="bg-gradient-to-r from-purple-500 to-purple-800 bg-clip-text text-transparent font-bold text-2xl">
-          To do flow
+          To Do Flow
         </h1>
         <button
           onClick={toggleTheme}
