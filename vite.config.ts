@@ -10,5 +10,5 @@ export default defineConfig({
       api: path.resolve(__dirname, "./api"),
     },
   },
-  base: "/to-do-flow-1/",
+  base: "/",
 })
