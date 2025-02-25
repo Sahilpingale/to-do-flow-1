@@ -20,7 +20,6 @@ const Home = () => {
   const navigate = useNavigate()
   const { toggleTheme } = useTheme()
 
-  // Fetch projects on component mount
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -30,7 +29,6 @@ const Home = () => {
           createdAt: project.createdAt ?? "",
           updatedAt: project.updatedAt ?? "",
         }))
-        console.log(fetchedProjects)
         setProjects(fetchedProjects)
       } catch (error) {
         console.error("Failed to fetch projects:", error)

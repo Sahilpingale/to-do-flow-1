@@ -36,22 +36,6 @@ import { useDebounce } from "@/hooks/useDebounce"
 import { FlowTaskNode, FlowTaskEdge } from "@/types/flow"
 import { apiClient } from "@/lib/api"
 
-// const getProjectById = (id: string): Project | undefined => {
-//   if (!id) return undefined
-//   const localStorageProjects = localStorage.getItem("projects")
-//   if (!localStorageProjects) return undefined
-//   const parsedProjects = JSON.parse(localStorageProjects || "[]")
-//   const project = parsedProjects.find((project: Project) => project.id === id)
-
-//   if (project) {
-//     return {
-//       ...project,
-//       createdAt: new Date(project.createdAt),
-//       updatedAt: new Date(project.updatedAt),
-//     }
-//   }
-// }
-
 export default function Projects() {
   const { id } = useParams()
   const { toggleTheme, theme } = useTheme()
@@ -84,14 +68,6 @@ export default function Projects() {
 
   const saveProjectChanges = useCallback(async () => {
     if (!id) return
-
-    // const localStorageProjects = localStorage.getItem("projects")
-    // if (!localStorageProjects) {
-    //   return
-    // }
-
-    // const parsedProjects = JSON.parse(localStorageProjects)
-    // const currentProject = parsedProjects.find((p: Project) => p.id === id)
 
     const nodesToAdd: TaskNode[] = nodes.filter(
       (node) => !project?.nodes?.some((n: TaskNode) => n.id === node.id)
@@ -132,30 +108,6 @@ export default function Projects() {
         (edge: TaskEdge) => !edges.some((e) => e.id === edge.id)
       ) || []
 
-    // const updatedProjects = parsedProjects.map((p: Project) => {
-    //   if (p.id === id) {
-    //     return {
-    //       ...p,
-    //       nodes,
-    //       edges,
-    //       updatedAt: new Date(),
-    //     }
-    //   }
-    //   return p
-    // })
-
-    console.log("Nodes to Add:", nodesToAdd)
-    console.log(
-      "Nodes to Delete:",
-      nodesToDelete.map((n) => n.id)
-    )
-    console.log("Nodes to Change:", nodesToChange)
-    console.log("Edges to Add:", edgesToAdd)
-    console.log(
-      "Edges to Delete:",
-      edgesToDelete.map((e) => e.id)
-    )
-
     const request: ProjectsIdPatchRequest = {
       edgesToAdd: edgesToAdd,
       edgesToRemove: edgesToDelete,
@@ -165,16 +117,9 @@ export default function Projects() {
     }
 
     await apiClient.projectsIdPatch(id!, request)
-
-    // localStorage.setItem("projects", JSON.stringify(updatedProjects))
   }, [id, nodes, edges, project])
 
-  // Use debounce hook for saving changes
-  useDebounce(
-    { nodes, edges },
-    () => saveProjectChanges(),
-    1000 // 1 second delay
-  )
+  useDebounce({ nodes, edges }, () => saveProjectChanges(), 1000)
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
@@ -197,7 +142,6 @@ export default function Projects() {
     [setEdges]
   )
 
-  // Add new function to handle node creation
   const handleAddNode = () => {
     const newNode: FlowTaskNode = {
       id: uuidv4(),
@@ -213,7 +157,7 @@ export default function Projects() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return
   }
 
   return (
@@ -233,12 +177,10 @@ export default function Projects() {
         <MiniMap position="bottom-left" />
         <Controls position="top-right">
           <ControlButton onClick={toggleTheme}>
-            {/* if theme is dark, show sun icon, otherwise show moon icon */}
             {theme === "dark" ? <MoonIcon /> : <SunIcon />}
           </ControlButton>
         </Controls>
 
-        {/* Use Panel component instead of div for floating elements */}
         <Panel position="bottom-right" className="p-4">
           <Button size="lg" variant="outline" onClick={handleAddNode}>
             Add Task

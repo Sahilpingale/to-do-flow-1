@@ -127,13 +127,11 @@ export function TaskNodeComponent(props: TaskNodeProps) {
       <Handle
         type="target"
         position={Position.Left}
-        // id="b"
         isConnectable={isConnectable}
       />
       <Handle
         type="source"
         position={Position.Right}
-        // id="b"
         isConnectable={isConnectable}
       />
     </div>
