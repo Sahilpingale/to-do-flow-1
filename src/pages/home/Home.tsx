@@ -14,11 +14,14 @@ import {
 import { useTheme } from "@/hooks/useTheme"
 import { apiClient } from "@/lib/api"
 import { Project } from "api/api"
+import { Button } from "@/components/ui/button"
+import { useAuth } from "@/hooks/useAuth"
 
 const Home = () => {
   const [projects, setProjects] = useState<Project[]>([])
   const navigate = useNavigate()
   const { toggleTheme } = useTheme()
+  const { isAuthenticated, signInWithGoogle, signOut, user } = useAuth()
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -71,14 +74,30 @@ const Home = () => {
         <h1 className="bg-gradient-to-r from-purple-500 to-purple-800 bg-clip-text text-transparent font-bold text-2xl">
           To Do Flow
         </h1>
-        <button
-          onClick={toggleTheme}
-          className="inline-flex items-center justify-center rounded-md w-9 h-9 border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-        >
-          <IconSun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <IconMoon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </button>
+
+        <div className="flex gap-2 items-center">
+          {isAuthenticated ? (
+            <>
+              <span className="text-sm">{user?.email}</span>
+              <span className="text-sm">{user?.uid}</span>
+              <Button variant="outline" onClick={signOut}>
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <Button variant="outline" onClick={signInWithGoogle}>
+              Sign In
+            </Button>
+          )}
+          <button
+            onClick={toggleTheme}
+            className="inline-flex items-center justify-center rounded-md w-9 h-9 border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <IconSun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <IconMoon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">Toggle theme</span>
+          </button>
+        </div>
       </div>
 
       <section className="w-full dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center">

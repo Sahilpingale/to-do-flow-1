@@ -1,5 +1,4 @@
 import "@xyflow/react/dist/style.css"
-
 import { Navigate, Route, Routes } from "react-router-dom"
 import Projects from "./pages/projects"
 import Home from "./pages/home"
