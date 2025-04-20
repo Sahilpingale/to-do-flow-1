@@ -5,13 +5,16 @@ import App from "./App"
 import "./index.css"
 import { ThemeProvider } from "./contexts/ThemeProvider"
 import { AuthProvider } from "./contexts/AuthContext"
+import { NotificationProvider } from "./contexts/NotificationProvider"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <ThemeProvider>
-          <App />
+          <NotificationProvider>
+            <App />
+          </NotificationProvider>
         </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>
