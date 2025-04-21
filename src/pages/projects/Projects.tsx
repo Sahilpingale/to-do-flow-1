@@ -29,12 +29,12 @@ import {
   TaskNode,
   NodeType,
   TaskStatus,
-  ProjectsIdPatchRequest,
+  UpdateProjectRequest,
 } from "api/api"
 import { useParams } from "react-router-dom"
 import { useDebounce } from "@/hooks/useDebounce"
 import { FlowTaskNode, FlowTaskEdge } from "@/types/flow"
-import { apiClient } from "@/lib/api"
+import { todoFlowClient } from "@/lib/api"
 
 export default function Projects() {
   const { id } = useParams()
@@ -53,7 +53,7 @@ export default function Projects() {
     const fetchProject = async () => {
       setIsLoading(true)
       try {
-        const response = await apiClient.projectsIdGet(id!)
+        const response = await todoFlowClient.projectsIdGet(id!)
         setProject(response.data)
         setNodes((response.data.nodes as FlowTaskNode[]) || [])
         setEdges((response.data.edges as FlowTaskEdge[]) || [])
@@ -108,7 +108,7 @@ export default function Projects() {
         (edge: TaskEdge) => !edges.some((e) => e.id === edge.id)
       ) || []
 
-    const request: ProjectsIdPatchRequest = {
+    const request: UpdateProjectRequest = {
       edgesToAdd: edgesToAdd,
       edgesToRemove: edgesToDelete,
       nodesToRemove: nodesToDelete,
@@ -116,7 +116,7 @@ export default function Projects() {
       nodesToAdd: nodesToAdd,
     }
 
-    await apiClient.projectsIdPatch(id!, request)
+    await todoFlowClient.projectsIdPatch(id!, request)
   }, [id, nodes, edges, project])
 
   useDebounce({ nodes, edges }, () => saveProjectChanges(), 1000)

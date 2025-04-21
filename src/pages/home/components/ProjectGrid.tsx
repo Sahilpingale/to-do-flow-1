@@ -7,39 +7,28 @@ import {
   TableCell,
 } from "@/components/ui/table"
 import { TextInputWithAcceptReject } from "@/components/ui/TextInputWithAcceptReject"
-import { apiClient } from "@/lib/api"
+import { useAuth } from "@/hooks/useAuth"
+import { todoFlowClient } from "@/lib/api"
 import { IconPencil, IconTrash } from "@tabler/icons-react"
 import { Project } from "api/api"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-const mockProjects: Project[] = [
-  {
-    id: "1",
-    name: "Project 1",
-    createdAt: "2021-01-01",
-  },
-  {
-    id: "2",
-    name: "Project 2",
-    createdAt: "2021-01-02",
-  },
-  {
-    id: "3",
-    name: "Project 3",
-    createdAt: "2021-01-03",
-  },
-]
-
 export const ProjectGrid = () => {
-  const [projects, setProjects] = useState<Project[]>(mockProjects)
+  const [projects, setProjects] = useState<Project[]>([])
   const textInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
+  const { user } = useAuth()
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
+    // if (!user) return
+
     try {
-      const response = await apiClient.projectsGet()
-      const fetchedProjects = response.data.map((project) => ({
+      // Preload token before making API call
+      // await preloadToken()
+
+      const response = await todoFlowClient.projectsGet()
+      const fetchedProjects = response.data.map((project: Project) => ({
         ...project,
         createdAt: project.createdAt ?? "",
         updatedAt: project.updatedAt ?? "",
@@ -48,15 +37,15 @@ export const ProjectGrid = () => {
     } catch (error) {
       console.error("Failed to fetch projects:", error)
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchProjects()
-  }, [])
+  }, [user?.uid, fetchProjects])
 
   const handleCreateProject = async () => {
     try {
-      const response = await apiClient.projectsPost({
+      const response = await todoFlowClient.projectsPost({
         name: `Project ${projects.length + 1}`,
       })
 
@@ -74,7 +63,7 @@ export const ProjectGrid = () => {
 
   const handleDeleteProject = async (id: string) => {
     try {
-      await apiClient.projectsIdDelete(id)
+      await todoFlowClient.projectsIdDelete(id)
       setProjects((prev) => prev.filter((project) => project.id !== id))
     } catch (error) {
       console.error("Failed to delete project:", error)
