@@ -26,6 +26,150 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface AuthLogoutPost200Response
+ */
+export interface AuthLogoutPost200Response {
+    /**
+     * Logout message
+     * @type {string}
+     * @memberof AuthLogoutPost200Response
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AuthRefreshTokenPost200Response
+ */
+export interface AuthRefreshTokenPost200Response {
+    /**
+     * New access token
+     * @type {string}
+     * @memberof AuthRefreshTokenPost200Response
+     */
+    'accessToken'?: string;
+    /**
+     * New refresh token (if rotated)
+     * @type {string}
+     * @memberof AuthRefreshTokenPost200Response
+     */
+    'refreshToken'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateProjectRequest
+ */
+export interface CreateProjectRequest {
+    /**
+     * Name of the project
+     * @type {string}
+     * @memberof CreateProjectRequest
+     */
+    'name': string;
+}
+/**
+ * 
+ * @export
+ * @interface ErrorResponse
+ */
+export interface ErrorResponse {
+    /**
+     * Error message
+     * @type {string}
+     * @memberof ErrorResponse
+     */
+    'error': string;
+}
+/**
+ * 
+ * @export
+ * @interface LoginRequest
+ */
+export interface LoginRequest {
+    /**
+     * User\'s email address
+     * @type {string}
+     * @memberof LoginRequest
+     */
+    'email': string;
+    /**
+     * User\'s display name
+     * @type {string}
+     * @memberof LoginRequest
+     */
+    'displayName': string;
+    /**
+     * URL to user\'s profile photo
+     * @type {string}
+     * @memberof LoginRequest
+     */
+    'photoURL'?: string;
+    /**
+     * User\'s phone number
+     * @type {string}
+     * @memberof LoginRequest
+     */
+    'phoneNumber'?: string;
+    /**
+     * User\'s unique identifier
+     * @type {string}
+     * @memberof LoginRequest
+     */
+    'uid': string;
+    /**
+     * Refresh token
+     * @type {string}
+     * @memberof LoginRequest
+     */
+    'refreshToken'?: string;
+    /**
+     * Access token
+     * @type {string}
+     * @memberof LoginRequest
+     */
+    'accessToken'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface LoginResponse
+ */
+export interface LoginResponse {
+    /**
+     * User\'s ID in the system
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    'id': string;
+    /**
+     * User\'s email address
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    'email': string;
+    /**
+     * Account creation timestamp
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    'createdAt': string;
+    /**
+     * Account last update timestamp
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    'updatedAt': string;
+    /**
+     * Access token
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    'accessToken'?: string;
+}
+/**
+ * 
+ * @export
  * @enum {string}
  */
 
@@ -82,121 +226,45 @@ export interface Project {
 /**
  * 
  * @export
- * @interface ProjectsIdPatchRequest
+ * @interface ProjectResponse
  */
-export interface ProjectsIdPatchRequest {
+export interface ProjectResponse {
     /**
-     * 
-     * @type {Array<ProjectsIdPatchRequestNodesToUpdateInner>}
-     * @memberof ProjectsIdPatchRequest
-     */
-    'nodesToUpdate'?: Array<ProjectsIdPatchRequestNodesToUpdateInner>;
-    /**
-     * 
-     * @type {Array<ProjectsIdPatchRequestNodesToUpdateInner>}
-     * @memberof ProjectsIdPatchRequest
-     */
-    'nodesToAdd'?: Array<ProjectsIdPatchRequestNodesToUpdateInner>;
-    /**
-     * 
-     * @type {Array<ProjectsIdPatchRequestNodesToRemoveInner>}
-     * @memberof ProjectsIdPatchRequest
-     */
-    'nodesToRemove'?: Array<ProjectsIdPatchRequestNodesToRemoveInner>;
-    /**
-     * 
-     * @type {Array<ProjectsIdPatchRequestEdgesToAddInner>}
-     * @memberof ProjectsIdPatchRequest
-     */
-    'edgesToAdd'?: Array<ProjectsIdPatchRequestEdgesToAddInner>;
-    /**
-     * 
-     * @type {Array<ProjectsIdPatchRequestNodesToRemoveInner>}
-     * @memberof ProjectsIdPatchRequest
-     */
-    'edgesToRemove'?: Array<ProjectsIdPatchRequestNodesToRemoveInner>;
-}
-/**
- * 
- * @export
- * @interface ProjectsIdPatchRequestEdgesToAddInner
- */
-export interface ProjectsIdPatchRequestEdgesToAddInner {
-    /**
-     * 
+     * Unique identifier for the project
      * @type {string}
-     * @memberof ProjectsIdPatchRequestEdgesToAddInner
+     * @memberof ProjectResponse
      */
     'id'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectsIdPatchRequestEdgesToAddInner
-     */
-    'source'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectsIdPatchRequestEdgesToAddInner
-     */
-    'target'?: string;
-}
-/**
- * 
- * @export
- * @interface ProjectsIdPatchRequestNodesToRemoveInner
- */
-export interface ProjectsIdPatchRequestNodesToRemoveInner {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectsIdPatchRequestNodesToRemoveInner
-     */
-    'id'?: string;
-}
-/**
- * 
- * @export
- * @interface ProjectsIdPatchRequestNodesToUpdateInner
- */
-export interface ProjectsIdPatchRequestNodesToUpdateInner {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectsIdPatchRequestNodesToUpdateInner
-     */
-    'id'?: string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjectsIdPatchRequestNodesToUpdateInner
-     */
-    'data'?: object;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjectsIdPatchRequestNodesToUpdateInner
-     */
-    'position'?: object;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectsIdPatchRequestNodesToUpdateInner
-     */
-    'type'?: string;
-}
-/**
- * 
- * @export
- * @interface ProjectsPostRequest
- */
-export interface ProjectsPostRequest {
     /**
      * Name of the project
      * @type {string}
-     * @memberof ProjectsPostRequest
+     * @memberof ProjectResponse
      */
     'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectResponse
+     */
+    'createdAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectResponse
+     */
+    'updatedAt'?: string;
+    /**
+     * 
+     * @type {Array<TaskNode>}
+     * @memberof ProjectResponse
+     */
+    'nodes'?: Array<TaskNode>;
+    /**
+     * 
+     * @type {Array<TaskEdge>}
+     * @memberof ProjectResponse
+     */
+    'edges'?: Array<TaskEdge>;
 }
 /**
  * 
@@ -343,6 +411,290 @@ export const TaskStatus = {
 export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus];
 
 
+/**
+ * 
+ * @export
+ * @interface UpdateProjectRequest
+ */
+export interface UpdateProjectRequest {
+    /**
+     * 
+     * @type {Array<TaskNode>}
+     * @memberof UpdateProjectRequest
+     */
+    'nodesToUpdate'?: Array<TaskNode>;
+    /**
+     * 
+     * @type {Array<TaskNode>}
+     * @memberof UpdateProjectRequest
+     */
+    'nodesToAdd'?: Array<TaskNode>;
+    /**
+     * 
+     * @type {Array<UpdateProjectRequestNodesToRemoveInner>}
+     * @memberof UpdateProjectRequest
+     */
+    'nodesToRemove'?: Array<UpdateProjectRequestNodesToRemoveInner>;
+    /**
+     * 
+     * @type {Array<TaskEdge>}
+     * @memberof UpdateProjectRequest
+     */
+    'edgesToAdd'?: Array<TaskEdge>;
+    /**
+     * 
+     * @type {Array<UpdateProjectRequestNodesToRemoveInner>}
+     * @memberof UpdateProjectRequest
+     */
+    'edgesToRemove'?: Array<UpdateProjectRequestNodesToRemoveInner>;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateProjectRequestNodesToRemoveInner
+ */
+export interface UpdateProjectRequestNodesToRemoveInner {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateProjectRequestNodesToRemoveInner
+     */
+    'id'?: string;
+}
+
+/**
+ * AuthenticationToDoFlow - axios parameter creator
+ * @export
+ */
+export const AuthenticationToDoFlowAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Login or register a user
+         * @param {LoginRequest} loginRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authLoginPost: async (loginRequest: LoginRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'loginRequest' is not null or undefined
+            assertParamExists('authLoginPost', 'loginRequest', loginRequest)
+            const localVarPath = `/auth/login`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(loginRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Logout a user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authLogoutPost: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Refresh access token using refresh token from HTTP-only cookie
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authRefreshTokenPost: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/refresh-token`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AuthenticationToDoFlow - functional programming interface
+ * @export
+ */
+export const AuthenticationToDoFlowFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AuthenticationToDoFlowAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Login or register a user
+         * @param {LoginRequest} loginRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async authLoginPost(loginRequest: LoginRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authLoginPost(loginRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthenticationToDoFlow.authLoginPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Logout a user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async authLogoutPost(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthLogoutPost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authLogoutPost(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthenticationToDoFlow.authLogoutPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Refresh access token using refresh token from HTTP-only cookie
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async authRefreshTokenPost(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthRefreshTokenPost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authRefreshTokenPost(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthenticationToDoFlow.authRefreshTokenPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * AuthenticationToDoFlow - factory interface
+ * @export
+ */
+export const AuthenticationToDoFlowFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AuthenticationToDoFlowFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Login or register a user
+         * @param {LoginRequest} loginRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authLoginPost(loginRequest: LoginRequest, options?: RawAxiosRequestConfig): AxiosPromise<LoginResponse> {
+            return localVarFp.authLoginPost(loginRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Logout a user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authLogoutPost(options?: RawAxiosRequestConfig): AxiosPromise<AuthLogoutPost200Response> {
+            return localVarFp.authLogoutPost(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Refresh access token using refresh token from HTTP-only cookie
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        authRefreshTokenPost(options?: RawAxiosRequestConfig): AxiosPromise<AuthRefreshTokenPost200Response> {
+            return localVarFp.authRefreshTokenPost(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AuthenticationToDoFlow - object-oriented interface
+ * @export
+ * @class AuthenticationToDoFlow
+ * @extends {BaseAPI}
+ */
+export class AuthenticationToDoFlow extends BaseAPI {
+    /**
+     * 
+     * @summary Login or register a user
+     * @param {LoginRequest} loginRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthenticationToDoFlow
+     */
+    public authLoginPost(loginRequest: LoginRequest, options?: RawAxiosRequestConfig) {
+        return AuthenticationToDoFlowFp(this.configuration).authLoginPost(loginRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Logout a user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthenticationToDoFlow
+     */
+    public authLogoutPost(options?: RawAxiosRequestConfig) {
+        return AuthenticationToDoFlowFp(this.configuration).authLogoutPost(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Refresh access token using refresh token from HTTP-only cookie
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuthenticationToDoFlow
+     */
+    public authRefreshTokenPost(options?: RawAxiosRequestConfig) {
+        return AuthenticationToDoFlowFp(this.configuration).authRefreshTokenPost(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * ProjectsToDoFlow - axios parameter creator
@@ -351,7 +703,7 @@ export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus];
 export const ProjectsToDoFlowAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Retrieves a list of all projects with their associated nodes and edges.
+         * Retrieves a list of all projects for the authenticated user.
          * @summary Get all projects
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -452,15 +804,15 @@ export const ProjectsToDoFlowAxiosParamCreator = function (configuration?: Confi
          * Updates a project\'s nodes and edges.
          * @summary Edit a project
          * @param {string} id The project ID
-         * @param {ProjectsIdPatchRequest} projectsIdPatchRequest 
+         * @param {UpdateProjectRequest} updateProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsIdPatch: async (id: string, projectsIdPatchRequest: ProjectsIdPatchRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projectsIdPatch: async (id: string, updateProjectRequest: UpdateProjectRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('projectsIdPatch', 'id', id)
-            // verify required parameter 'projectsIdPatchRequest' is not null or undefined
-            assertParamExists('projectsIdPatch', 'projectsIdPatchRequest', projectsIdPatchRequest)
+            // verify required parameter 'updateProjectRequest' is not null or undefined
+            assertParamExists('projectsIdPatch', 'updateProjectRequest', updateProjectRequest)
             const localVarPath = `/projects/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -481,7 +833,7 @@ export const ProjectsToDoFlowAxiosParamCreator = function (configuration?: Confi
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(projectsIdPatchRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateProjectRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -491,13 +843,13 @@ export const ProjectsToDoFlowAxiosParamCreator = function (configuration?: Confi
         /**
          * Creates a new project with the given name.
          * @summary Create a new project
-         * @param {ProjectsPostRequest} projectsPostRequest 
+         * @param {CreateProjectRequest} createProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsPost: async (projectsPostRequest: ProjectsPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'projectsPostRequest' is not null or undefined
-            assertParamExists('projectsPost', 'projectsPostRequest', projectsPostRequest)
+        projectsPost: async (createProjectRequest: CreateProjectRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createProjectRequest' is not null or undefined
+            assertParamExists('projectsPost', 'createProjectRequest', createProjectRequest)
             const localVarPath = `/projects`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -517,7 +869,7 @@ export const ProjectsToDoFlowAxiosParamCreator = function (configuration?: Confi
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(projectsPostRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createProjectRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -535,12 +887,12 @@ export const ProjectsToDoFlowFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ProjectsToDoFlowAxiosParamCreator(configuration)
     return {
         /**
-         * Retrieves a list of all projects with their associated nodes and edges.
+         * Retrieves a list of all projects for the authenticated user.
          * @summary Get all projects
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectsGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Project>>> {
+        async projectsGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ProjectResponse>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectsGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectsToDoFlow.projectsGet']?.[localVarOperationServerIndex]?.url;
@@ -566,7 +918,7 @@ export const ProjectsToDoFlowFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectsIdGet(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>> {
+        async projectsIdGet(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectsIdGet(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectsToDoFlow.projectsIdGet']?.[localVarOperationServerIndex]?.url;
@@ -576,12 +928,12 @@ export const ProjectsToDoFlowFp = function(configuration?: Configuration) {
          * Updates a project\'s nodes and edges.
          * @summary Edit a project
          * @param {string} id The project ID
-         * @param {ProjectsIdPatchRequest} projectsIdPatchRequest 
+         * @param {UpdateProjectRequest} updateProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectsIdPatch(id: string, projectsIdPatchRequest: ProjectsIdPatchRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.projectsIdPatch(id, projectsIdPatchRequest, options);
+        async projectsIdPatch(id: string, updateProjectRequest: UpdateProjectRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectsIdPatch(id, updateProjectRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectsToDoFlow.projectsIdPatch']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -589,12 +941,12 @@ export const ProjectsToDoFlowFp = function(configuration?: Configuration) {
         /**
          * Creates a new project with the given name.
          * @summary Create a new project
-         * @param {ProjectsPostRequest} projectsPostRequest 
+         * @param {CreateProjectRequest} createProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectsPost(projectsPostRequest: ProjectsPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.projectsPost(projectsPostRequest, options);
+        async projectsPost(createProjectRequest: CreateProjectRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectsPost(createProjectRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectsToDoFlow.projectsPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -610,12 +962,12 @@ export const ProjectsToDoFlowFactory = function (configuration?: Configuration, 
     const localVarFp = ProjectsToDoFlowFp(configuration)
     return {
         /**
-         * Retrieves a list of all projects with their associated nodes and edges.
+         * Retrieves a list of all projects for the authenticated user.
          * @summary Get all projects
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<Project>> {
+        projectsGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<ProjectResponse>> {
             return localVarFp.projectsGet(options).then((request) => request(axios, basePath));
         },
         /**
@@ -635,29 +987,29 @@ export const ProjectsToDoFlowFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsIdGet(id: string, options?: RawAxiosRequestConfig): AxiosPromise<Project> {
+        projectsIdGet(id: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjectResponse> {
             return localVarFp.projectsIdGet(id, options).then((request) => request(axios, basePath));
         },
         /**
          * Updates a project\'s nodes and edges.
          * @summary Edit a project
          * @param {string} id The project ID
-         * @param {ProjectsIdPatchRequest} projectsIdPatchRequest 
+         * @param {UpdateProjectRequest} updateProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsIdPatch(id: string, projectsIdPatchRequest: ProjectsIdPatchRequest, options?: RawAxiosRequestConfig): AxiosPromise<Project> {
-            return localVarFp.projectsIdPatch(id, projectsIdPatchRequest, options).then((request) => request(axios, basePath));
+        projectsIdPatch(id: string, updateProjectRequest: UpdateProjectRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProjectResponse> {
+            return localVarFp.projectsIdPatch(id, updateProjectRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Creates a new project with the given name.
          * @summary Create a new project
-         * @param {ProjectsPostRequest} projectsPostRequest 
+         * @param {CreateProjectRequest} createProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsPost(projectsPostRequest: ProjectsPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<Project> {
-            return localVarFp.projectsPost(projectsPostRequest, options).then((request) => request(axios, basePath));
+        projectsPost(createProjectRequest: CreateProjectRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProjectResponse> {
+            return localVarFp.projectsPost(createProjectRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -670,7 +1022,7 @@ export const ProjectsToDoFlowFactory = function (configuration?: Configuration, 
  */
 export class ProjectsToDoFlow extends BaseAPI {
     /**
-     * Retrieves a list of all projects with their associated nodes and edges.
+     * Retrieves a list of all projects for the authenticated user.
      * @summary Get all projects
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -708,25 +1060,25 @@ export class ProjectsToDoFlow extends BaseAPI {
      * Updates a project\'s nodes and edges.
      * @summary Edit a project
      * @param {string} id The project ID
-     * @param {ProjectsIdPatchRequest} projectsIdPatchRequest 
+     * @param {UpdateProjectRequest} updateProjectRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsToDoFlow
      */
-    public projectsIdPatch(id: string, projectsIdPatchRequest: ProjectsIdPatchRequest, options?: RawAxiosRequestConfig) {
-        return ProjectsToDoFlowFp(this.configuration).projectsIdPatch(id, projectsIdPatchRequest, options).then((request) => request(this.axios, this.basePath));
+    public projectsIdPatch(id: string, updateProjectRequest: UpdateProjectRequest, options?: RawAxiosRequestConfig) {
+        return ProjectsToDoFlowFp(this.configuration).projectsIdPatch(id, updateProjectRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Creates a new project with the given name.
      * @summary Create a new project
-     * @param {ProjectsPostRequest} projectsPostRequest 
+     * @param {CreateProjectRequest} createProjectRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsToDoFlow
      */
-    public projectsPost(projectsPostRequest: ProjectsPostRequest, options?: RawAxiosRequestConfig) {
-        return ProjectsToDoFlowFp(this.configuration).projectsPost(projectsPostRequest, options).then((request) => request(this.axios, this.basePath));
+    public projectsPost(createProjectRequest: CreateProjectRequest, options?: RawAxiosRequestConfig) {
+        return ProjectsToDoFlowFp(this.configuration).projectsPost(createProjectRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

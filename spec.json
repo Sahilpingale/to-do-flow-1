@@ -7,10 +7,139 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": ""
     }
   ],
   "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "Login or register a user",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User logged in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "summary": "Refresh access token using refresh token from HTTP-only cookie",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully refreshed token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "description": "New access token"
+                    },
+                    "refreshToken": {
+                      "type": "string",
+                      "description": "New refresh token (if rotated)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or expired refresh token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout a user",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Logout message"
+                    }
+                  },
+                  "example": {
+                    "message": "Logged out successfully"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/projects": {
       "post": {
         "summary": "Create a new project",
@@ -23,13 +152,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the project"
-                  }
-                }
+                "$ref": "#/components/schemas/CreateProjectRequest"
               }
             }
           }
@@ -40,10 +163,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Project"
+                  "$ref": "#/components/schemas/ProjectResponse"
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - User not authenticated"
           },
           "500": {
             "description": "Internal server error"
@@ -52,7 +178,7 @@
       },
       "get": {
         "summary": "Get all projects",
-        "description": "Retrieves a list of all projects with their associated nodes and edges.",
+        "description": "Retrieves a list of all projects for the authenticated user.",
         "tags": [
           "Projects"
         ],
@@ -64,11 +190,14 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Project"
+                    "$ref": "#/components/schemas/ProjectResponse"
                   }
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - User not authenticated"
           },
           "500": {
             "description": "Internal server error"
@@ -100,7 +229,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Project"
+                  "$ref": "#/components/schemas/ProjectResponse"
                 }
               }
             }
@@ -135,88 +264,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "nodesToUpdate": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "data": {
-                          "type": "object"
-                        },
-                        "position": {
-                          "type": "object"
-                        },
-                        "type": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  },
-                  "nodesToAdd": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "data": {
-                          "type": "object"
-                        },
-                        "position": {
-                          "type": "object"
-                        },
-                        "type": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  },
-                  "nodesToRemove": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  },
-                  "edgesToAdd": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "source": {
-                          "type": "string"
-                        },
-                        "target": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  },
-                  "edgesToRemove": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
+                "$ref": "#/components/schemas/UpdateProjectRequest"
               }
             }
           }
@@ -227,7 +275,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Project"
+                  "$ref": "#/components/schemas/ProjectResponse"
                 }
               }
             }
@@ -272,6 +320,105 @@
   },
   "components": {
     "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email address"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "User's display name"
+          },
+          "photoURL": {
+            "type": "string",
+            "description": "URL to user's profile photo"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "User's phone number"
+          },
+          "uid": {
+            "type": "string",
+            "description": "User's unique identifier"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "Access token"
+          }
+        },
+        "required": [
+          "email",
+          "displayName",
+          "uid"
+        ],
+        "example": {
+          "email": "user@example.com",
+          "displayName": "John Doe",
+          "photoURL": "https://example.com/photo.jpg",
+          "phoneNumber": "+1234567890",
+          "uid": "user123"
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User's ID in the system"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email address"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Account creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Account last update timestamp"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "Access token"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "createdAt",
+          "updatedAt"
+        ],
+        "example": {
+          "id": "12345",
+          "email": "user@example.com",
+          "createdAt": "2023-01-01T00:00:00.000Z",
+          "updatedAt": "2023-01-01T00:00:00.000Z"
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "example": {
+          "error": "An error occurred during processing"
+        }
+      },
       "NodeType": {
         "type": "string",
         "enum": [
@@ -378,6 +525,99 @@
           },
           "reconnectable": {
             "type": "boolean"
+          }
+        }
+      },
+      "CreateProjectRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the project"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "example": {
+          "name": "My New Project"
+        }
+      },
+      "ProjectResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the project"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the project"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskNode"
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskEdge"
+            }
+          }
+        }
+      },
+      "UpdateProjectRequest": {
+        "type": "object",
+        "properties": {
+          "nodesToUpdate": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskNode"
+            }
+          },
+          "nodesToAdd": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskNode"
+            }
+          },
+          "nodesToRemove": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "edgesToAdd": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskEdge"
+            }
+          },
+          "edgesToRemove": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }

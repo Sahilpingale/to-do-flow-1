@@ -4,10 +4,21 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/useAuth"
 import { Hero } from "./components/Hero"
 import { ProjectGrid } from "./components/ProjectGrid"
+import { simulateTokenExpiration } from "@/lib/api"
 
 const Home = () => {
   const { toggleTheme } = useTheme()
   const { isAuthenticated, signInWithGoogle, signOut, user } = useAuth()
+
+  // Handler for testing token refresh
+  const handleTestTokenRefresh = async () => {
+    const result = await simulateTokenExpiration()
+    if (result) {
+      alert("Token invalidated. Make an API request to test refresh flow.")
+    } else {
+      alert("Failed to invalidate token. Make sure you're logged in.")
+    }
+  }
 
   return (
     <div className="h-screen w-full dark:bg-black bg-white text-black dark:text-white">
@@ -21,6 +32,18 @@ const Home = () => {
             <>
               <span className="text-sm">{user?.email}</span>
               <span className="text-sm">{user?.uid}</span>
+
+              {/* Test button - only visible in development */}
+              {import.meta.env.DEV && (
+                <Button
+                  variant="outline"
+                  onClick={handleTestTokenRefresh}
+                  className="text-xs bg-yellow-100 text-yellow-900 border-yellow-300 hover:bg-yellow-200"
+                >
+                  Test Token Refresh
+                </Button>
+              )}
+
               <Button variant="outline" onClick={signOut}>
                 Sign Out
               </Button>
@@ -42,7 +65,7 @@ const Home = () => {
       </div>
 
       <Hero />
-      <ProjectGrid />
+      {isAuthenticated && <ProjectGrid />}
     </div>
   )
 }
