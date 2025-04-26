@@ -100,71 +100,83 @@ export const ProjectGrid = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {projects.map((project) => (
-                <TableRow
-                  key={project.id}
-                  className="cursor-pointer  hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-                  onClick={(e) => {
-                    const target = e.target as HTMLElement
-                    const targetId =
-                      target.id || target.closest("[id]")?.id || ""
-
-                    const isNameField = targetId.startsWith("project-name-")
-                    const isDeleteAction =
-                      targetId.startsWith("project-delete-")
-
-                    if (!isNameField && !isDeleteAction) {
-                      navigate(`/project/${project.id}`)
-                    }
-                  }}
-                >
-                  <TableCell
-                    id={`project-name-${project.id}`}
-                    className="font-medium"
-                  >
-                    <TextInputWithAcceptReject
-                      leftSection={<IconPencil className="h-4 w-4" />}
-                      value={project.name ?? ""}
-                      initialValue={project.name ?? ""}
-                      onChange={async (value) => {
-                        handleUpdateProject(project.id!, value)
-                      }}
-                      ref={textInputRef}
-                    />
-                  </TableCell>
-
-                  <TableCell
-                    id={`project-created-at-${project.id}`}
-                    className="font-medium"
-                  >
-                    {project.createdAt
-                      ? new Date(project.createdAt).toLocaleDateString()
-                      : ""}
-                  </TableCell>
-                  <TableCell
-                    id={`project-updated-at-${project.id}`}
-                    className="font-medium"
-                  >
-                    {project.updatedAt
-                      ? new Date(project.updatedAt).toLocaleDateString()
-                      : ""}
-                  </TableCell>
-                  <TableCell
-                    id={`project-delete-${project.id}`}
-                    className="delete-cell"
-                  >
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleDeleteProject(project.id!)
-                      }}
-                      className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
-                    >
-                      <IconTrash className="h-4 w-4" />
-                    </button>
+              {projects.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-24 text-center">
+                    <div className="flex flex-col items-center justify-center py-6">
+                      <p className="text-neutral-400 dark:text-neutral-500 text-sm mt-1">
+                        Click the "New Project" to get started
+                      </p>
+                    </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                projects.map((project) => (
+                  <TableRow
+                    key={project.id}
+                    className="cursor-pointer  hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
+                    onClick={(e) => {
+                      const target = e.target as HTMLElement
+                      const targetId =
+                        target.id || target.closest("[id]")?.id || ""
+
+                      const isNameField = targetId.startsWith("project-name-")
+                      const isDeleteAction =
+                        targetId.startsWith("project-delete-")
+
+                      if (!isNameField && !isDeleteAction) {
+                        navigate(`/project/${project.id}`)
+                      }
+                    }}
+                  >
+                    <TableCell
+                      id={`project-name-${project.id}`}
+                      className="font-medium"
+                    >
+                      <TextInputWithAcceptReject
+                        leftSection={<IconPencil className="h-4 w-4" />}
+                        value={project.name ?? ""}
+                        initialValue={project.name ?? ""}
+                        onChange={async (value) => {
+                          handleUpdateProject(project.id!, value)
+                        }}
+                        ref={textInputRef}
+                      />
+                    </TableCell>
+
+                    <TableCell
+                      id={`project-created-at-${project.id}`}
+                      className="font-medium"
+                    >
+                      {project.createdAt
+                        ? new Date(project.createdAt).toLocaleDateString()
+                        : ""}
+                    </TableCell>
+                    <TableCell
+                      id={`project-updated-at-${project.id}`}
+                      className="font-medium"
+                    >
+                      {project.updatedAt
+                        ? new Date(project.updatedAt).toLocaleDateString()
+                        : ""}
+                    </TableCell>
+                    <TableCell
+                      id={`project-delete-${project.id}`}
+                      className="delete-cell"
+                    >
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDeleteProject(project.id!)
+                        }}
+                        className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md transition-colors"
+                      >
+                        <IconTrash className="h-4 w-4" />
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
