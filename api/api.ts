@@ -425,6 +425,12 @@ export interface UpdateProjectRequest {
     'nodesToUpdate'?: Array<TaskNode>;
     /**
      * 
+     * @type {string}
+     * @memberof UpdateProjectRequest
+     */
+    'name'?: string;
+    /**
+     * 
      * @type {Array<TaskNode>}
      * @memberof UpdateProjectRequest
      */

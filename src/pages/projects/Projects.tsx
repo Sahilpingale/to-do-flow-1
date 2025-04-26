@@ -116,7 +116,7 @@ export default function Projects() {
       nodesToAdd: nodesToAdd,
     }
 
-    await todoFlowClient.projectsIdPatch(id!, request)
+    await todoFlowClient.projectsIdPatch(id, request)
   }, [id, nodes, edges, project])
 
   useDebounce({ nodes, edges }, () => saveProjectChanges(), 1000)

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table"
 import { TextInputWithAcceptReject } from "@/components/ui/TextInputWithAcceptReject"
 import { useAuth } from "@/hooks/useAuth"
+import { useNotification } from "@/hooks/useNotification"
 import { todoFlowClient } from "@/lib/api"
 import { IconPencil, IconTrash } from "@tabler/icons-react"
 import { Project } from "api/api"
@@ -19,14 +20,9 @@ export const ProjectGrid = () => {
   const textInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
   const { user } = useAuth()
-
+  const { addSuccessNotification, addErrorNotification } = useNotification()
   const fetchProjects = useCallback(async () => {
-    // if (!user) return
-
     try {
-      // Preload token before making API call
-      // await preloadToken()
-
       const response = await todoFlowClient.projectsGet()
       const fetchedProjects = response.data.map((project: Project) => ({
         ...project,
@@ -67,6 +63,16 @@ export const ProjectGrid = () => {
       setProjects((prev) => prev.filter((project) => project.id !== id))
     } catch (error) {
       console.error("Failed to delete project:", error)
+    }
+  }
+
+  const handleUpdateProject = async (id: string, value: string) => {
+    try {
+      const response = await todoFlowClient.projectsIdPatch(id, { name: value })
+      setProjects((prev) => prev.map((p) => (p.id === id ? response.data : p)))
+      addSuccessNotification("Project updated successfully")
+    } catch (error) {
+      addErrorNotification("Failed to update project")
     }
   }
 
@@ -120,12 +126,8 @@ export const ProjectGrid = () => {
                       leftSection={<IconPencil className="h-4 w-4" />}
                       value={project.name ?? ""}
                       initialValue={project.name ?? ""}
-                      onChange={(value) => {
-                        setProjects((prev) =>
-                          prev.map((p) =>
-                            p.id === project.id ? { ...p, name: value } : p
-                          )
-                        )
+                      onChange={async (value) => {
+                        handleUpdateProject(project.id!, value)
                       }}
                       ref={textInputRef}
                     />
