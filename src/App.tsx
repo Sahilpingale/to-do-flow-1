@@ -5,6 +5,7 @@ import Home from "./pages/home"
 import { useAuth } from "./hooks/useAuth"
 import { useEffect } from "react"
 import { preloadToken } from "./lib/api"
+import Playground from "./pages/playground/Playground"
 
 export default function App() {
   const { isLoading, error, isAuthenticated } = useAuth()
@@ -29,6 +30,7 @@ export default function App() {
       <Route path="/" element={<Navigate to="/home" replace />} />
       <Route path="/home" element={<Home />} />
       <Route path="/project/:id" element={<Projects />} />
+      <Route path="/playground" element={<Playground />} />
     </Routes>
   )
 }

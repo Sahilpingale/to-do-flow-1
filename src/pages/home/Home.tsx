@@ -4,20 +4,19 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/useAuth"
 import { Hero } from "./components/Hero"
 import { ProjectGrid } from "./components/ProjectGrid"
-import { simulateTokenExpiration } from "@/lib/api"
 
 const Home = () => {
   const { toggleTheme } = useTheme()
   const { isAuthenticated, signInWithGoogle, signOut, user } = useAuth()
 
-  // Handler for testing token refresh
-  const handleTestTokenRefresh = async () => {
-    const result = await simulateTokenExpiration()
-    if (result) {
-      alert("Token invalidated. Make an API request to test refresh flow.")
-    } else {
-      alert("Failed to invalidate token. Make sure you're logged in.")
-    }
+  const currentHour = new Date().getHours()
+  let greeting
+  if (currentHour < 12) {
+    greeting = "Good morning"
+  } else if (currentHour < 18) {
+    greeting = "Good afternoon"
+  } else {
+    greeting = "Good evening"
   }
 
   return (
@@ -30,20 +29,6 @@ const Home = () => {
         <div className="flex gap-2 items-center">
           {isAuthenticated ? (
             <>
-              <span className="text-sm">{user?.email}</span>
-              <span className="text-sm">{user?.uid}</span>
-
-              {/* Test button - only visible in development */}
-              {import.meta.env.DEV && (
-                <Button
-                  variant="outline"
-                  onClick={handleTestTokenRefresh}
-                  className="text-xs bg-yellow-100 text-yellow-900 border-yellow-300 hover:bg-yellow-200"
-                >
-                  Test Token Refresh
-                </Button>
-              )}
-
               <Button variant="outline" onClick={signOut}>
                 Sign Out
               </Button>
@@ -64,8 +49,24 @@ const Home = () => {
         </div>
       </div>
 
-      <Hero />
-      {isAuthenticated && <ProjectGrid />}
+      {!isAuthenticated ? (
+        <Hero />
+      ) : (
+        <div>
+          <div className="mt-16 px-4 md:px-8 lg:px-16">
+            <h1 className="text-2xl md:text-3xl font-semibold mb-2">
+              <span className="bg-gradient-to-r from-purple-500 to-purple-800 bg-clip-text text-transparent">
+                {greeting}
+              </span>
+              {user?.displayName ? `, ${user.displayName}` : ""}
+            </h1>
+            <p className="text-neutral-600 dark:text-neutral-400">
+              Welcome to your personalized task management dashboard.
+            </p>
+          </div>
+          <ProjectGrid />
+        </div>
+      )}
     </div>
   )
 }
