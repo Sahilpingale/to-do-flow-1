@@ -105,7 +105,8 @@ export const ProjectGrid = () => {
                   <TableCell colSpan={4} className="h-24 text-center">
                     <div className="flex flex-col items-center justify-center py-6">
                       <p className="text-neutral-400 dark:text-neutral-500 text-sm mt-1">
-                        Click the "New Project" to get started
+                        Click the <span className="font-bold">New Project</span>{" "}
+                        button to get started
                       </p>
                     </div>
                   </TableCell>

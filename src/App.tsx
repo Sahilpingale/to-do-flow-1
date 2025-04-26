@@ -6,6 +6,8 @@ import { useAuth } from "./hooks/useAuth"
 import { useEffect } from "react"
 import { preloadToken } from "./lib/api"
 import Playground from "./pages/playground/Playground"
+import { LoadingScreen } from "./components/ui/loading-screen"
+import { ErrorScreen } from "./components/ui/error-screen"
 
 export default function App() {
   const { isLoading, error, isAuthenticated } = useAuth()
@@ -20,11 +22,13 @@ export default function App() {
   }, [isAuthenticated])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <LoadingScreen />
   }
+
   if (error) {
-    return <div>{error}</div>
+    return <ErrorScreen message={error} />
   }
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" replace />} />
