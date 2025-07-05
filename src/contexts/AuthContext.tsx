@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react"
 import { User } from "firebase/auth"
 import { auth, signInWithGoogle } from "@/config/firebase"
-import { authClient, clearTokenCache, preloadToken } from "@/lib/api"
+import { authClient, clearTokenCache } from "@/lib/api"
 
 const CURRENT_USER_DATA = "current_user_data"
 
@@ -66,9 +66,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       })
       localStorage.setItem(CURRENT_USER_DATA, JSON.stringify(response.data))
       setUser(user)
-
-      // Preload token for subsequent API calls
-      await preloadToken()
     } finally {
       setIsLoading(false)
     }

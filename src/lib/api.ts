@@ -174,12 +174,6 @@ export const clearTokenCache = () => {
   }
 }
 
-// Function to ensure a token is available before making requests
-export const ensureTokenAvailable = async (): Promise<boolean> => {
-  // This is now just an alias for preloadToken for backward compatibility
-  return preloadToken()
-}
-
 export const todoFlowClient = new ProjectsToDoFlow(
   configuration,
   undefined,
@@ -191,43 +185,6 @@ export const authClient = new AuthenticationToDoFlow(
   undefined,
   axiosInstance
 )
-
-// Function to preload a token for initial API requests
-export const preloadToken = async (): Promise<boolean> => {
-  try {
-    // Check if there's an access token in localStorage
-    const accessToken = getAccessTokenFromStorage()
-    if (accessToken) {
-      return true
-    }
-
-    // If no access token in localStorage but user is signed in with Firebase,
-    // try to get a token from Firebase and update localStorage
-    const currentUser = auth.currentUser
-    if (currentUser) {
-      try {
-        const newToken = await currentUser.getIdToken(false)
-
-        // Try to update the token in localStorage
-        const currentUserData = localStorage.getItem("current_user_data")
-        if (currentUserData) {
-          const userData = JSON.parse(currentUserData)
-          userData.accessToken = newToken
-          localStorage.setItem("current_user_data", JSON.stringify(userData))
-        }
-
-        return true
-      } catch (tokenError) {
-        console.error("Error getting Firebase token:", tokenError)
-      }
-    }
-
-    return false
-  } catch (error) {
-    console.error("Error preloading token:", error)
-    return false
-  }
-}
 
 // FOR TESTING ONLY: Simulates token expiration to test refresh flow
 export const simulateTokenExpiration = async (): Promise<boolean> => {
