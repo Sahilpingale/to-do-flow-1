@@ -241,27 +241,15 @@ export const simulateTokenExpiration = async (): Promise<boolean> => {
 
     const userData = JSON.parse(currentUserData)
 
-    // Store original token for logging
-    // const originalToken = userData.accessToken
-    // console.log("Original token:", originalToken?.substring(0, 10) + "...")
-
     // Modify the token to make it invalid (by changing a few characters)
     if (userData.accessToken) {
       // This will make the token invalid but keep its general structure
       userData.accessToken = userData.accessToken
         .replace(/a/g, "x")
         .replace(/e/g, "y")
-      // console.log(
-      //   "Modified token:",
-      //   userData.accessToken?.substring(0, 10) + "..."
-      // )
 
       // Save back to localStorage
       localStorage.setItem("current_user_data", JSON.stringify(userData))
-
-      // console.log(
-      //   "Token invalidated for testing. The next API call should trigger the refresh flow."
-      // )
       return true
     }
 
