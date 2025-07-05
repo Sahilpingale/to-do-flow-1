@@ -5,6 +5,7 @@ import {
 } from "../../api"
 import axios, { InternalAxiosRequestConfig } from "axios"
 import { auth } from "@/config/firebase"
+import { CURRENT_USER_DATA } from "@/contexts/AuthContext"
 
 // Create axios instance with interceptors
 const axiosInstance = axios.create({
@@ -33,7 +34,7 @@ const onTokenRefreshed = (token: string) => {
 // Function to get the access token from localStorage
 const getAccessTokenFromStorage = (): string | null => {
   try {
-    const currentUser = localStorage.getItem("current_user_data")
+    const currentUser = localStorage.getItem(CURRENT_USER_DATA)
     if (currentUser) {
       const userData = JSON.parse(currentUser)
       return userData.accessToken || null
@@ -129,7 +130,7 @@ axiosInstance.interceptors.response.use(
             if (refreshResponse.data.refreshToken) {
               userData.refreshToken = refreshResponse.data.refreshToken
             }
-            localStorage.setItem("current_user_data", JSON.stringify(userData))
+            localStorage.setItem(CURRENT_USER_DATA, JSON.stringify(userData))
           }
         } catch (storageError) {
           console.error(
@@ -148,7 +149,6 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error("❌ Token refresh failed:", refreshError)
         // Clear token cache on refresh failure
-        clearTokenCache()
         isRefreshing = false
 
         // You might want to trigger a sign-out or redirect to login here
@@ -164,22 +164,6 @@ const configuration = new Configuration({
   basePath: import.meta.env.VITE_API_URL,
 })
 
-// Clear token cache function is no longer needed since we're not caching tokens
-export const clearTokenCache = () => {
-  // For backward compatibility, keep this function but just clear auth data from localStorage
-  try {
-    localStorage.removeItem("current_user_data")
-  } catch (error) {
-    console.error("Error clearing auth data:", error)
-  }
-}
-
-// Function to ensure a token is available before making requests
-export const ensureTokenAvailable = async (): Promise<boolean> => {
-  // This is now just an alias for preloadToken for backward compatibility
-  return preloadToken()
-}
-
 export const todoFlowClient = new ProjectsToDoFlow(
   configuration,
   undefined,
@@ -191,43 +175,6 @@ export const authClient = new AuthenticationToDoFlow(
   undefined,
   axiosInstance
 )
-
-// Function to preload a token for initial API requests
-export const preloadToken = async (): Promise<boolean> => {
-  try {
-    // Check if there's an access token in localStorage
-    const accessToken = getAccessTokenFromStorage()
-    if (accessToken) {
-      return true
-    }
-
-    // If no access token in localStorage but user is signed in with Firebase,
-    // try to get a token from Firebase and update localStorage
-    const currentUser = auth.currentUser
-    if (currentUser) {
-      try {
-        const newToken = await currentUser.getIdToken(false)
-
-        // Try to update the token in localStorage
-        const currentUserData = localStorage.getItem("current_user_data")
-        if (currentUserData) {
-          const userData = JSON.parse(currentUserData)
-          userData.accessToken = newToken
-          localStorage.setItem("current_user_data", JSON.stringify(userData))
-        }
-
-        return true
-      } catch (tokenError) {
-        console.error("Error getting Firebase token:", tokenError)
-      }
-    }
-
-    return false
-  } catch (error) {
-    console.error("Error preloading token:", error)
-    return false
-  }
-}
 
 // FOR TESTING ONLY: Simulates token expiration to test refresh flow
 export const simulateTokenExpiration = async (): Promise<boolean> => {
@@ -249,7 +196,7 @@ export const simulateTokenExpiration = async (): Promise<boolean> => {
         .replace(/e/g, "y")
 
       // Save back to localStorage
-      localStorage.setItem("current_user_data", JSON.stringify(userData))
+      localStorage.setItem(CURRENT_USER_DATA, JSON.stringify(userData))
       return true
     }
 

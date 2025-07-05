@@ -1,9 +1,9 @@
 import React, { createContext, useState, useEffect } from "react"
 import { User } from "firebase/auth"
 import { auth, signInWithGoogle } from "@/config/firebase"
-import { authClient, clearTokenCache, preloadToken } from "@/lib/api"
+import { authClient } from "@/lib/api"
 
-const CURRENT_USER_DATA = "current_user_data"
+export const CURRENT_USER_DATA = "current_user_data"
 
 interface AuthContextType {
   user: User | null
@@ -36,14 +36,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
       try {
         if (firebaseUser) {
-          await handleUserData(firebaseUser)
+          await storeFirebaseUserDataToLocalStorage(firebaseUser)
         } else {
-          clearAuthData()
+          await handleSignOut()
         }
       } catch (error) {
         console.error("Auth state change error:", error)
         setError("Authentication error")
-        clearAuthData()
+        await handleSignOut()
       } finally {
         setIsLoading(false)
       }
@@ -52,8 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => unsubscribe()
   }, [])
 
-  // Store auth data in localStorage and cookies
-  const handleUserData = async (user: User) => {
+  const storeFirebaseUserDataToLocalStorage = async (user: User) => {
     setIsLoading(true)
     try {
       const response = await authClient.authLoginPost({
@@ -66,30 +65,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       })
       localStorage.setItem(CURRENT_USER_DATA, JSON.stringify(response.data))
       setUser(user)
-
-      // Preload token for subsequent API calls
-      await preloadToken()
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Clear auth data from localStorage and cookies
-  const clearAuthData = async () => {
-    await authClient.authLogoutPost()
-    localStorage.removeItem(CURRENT_USER_DATA)
-    clearTokenCache()
-    setUser(null)
-
-    // Todo: redirect to login page
-  }
-
-  // Enhanced sign in with Google (Button is only visible if user is not signed in)
   const handleSignInWithGoogle = async () => {
     setIsLoading(true)
     try {
       const result = await signInWithGoogle()
-      await handleUserData(result.user)
+      await storeFirebaseUserDataToLocalStorage(result.user)
     } catch (error) {
       console.error("Google sign in failed:", error)
       setIsLoading(false)
@@ -97,12 +82,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  // Sign out
   const handleSignOut = async () => {
     setIsLoading(true)
     try {
       await auth.signOut()
-      clearAuthData()
+      await authClient.authLogoutPost()
+      localStorage.removeItem(CURRENT_USER_DATA)
+      setUser(null)
     } catch (error) {
       console.error("Sign out failed:", error)
       setError("Authentication error: Sign out failed")
