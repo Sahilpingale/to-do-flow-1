@@ -24,12 +24,12 @@ import { useTheme } from "@/hooks/useTheme"
 import { Button } from "@/components/ui/button"
 import { MoonIcon, SunIcon, ArrowUpIcon, SquareIcon, XIcon } from "lucide-react"
 import {
-  Project,
-  TaskEdge,
-  TaskNode,
-  NodeType,
-  TaskStatus,
-  UpdateProjectRequest,
+  IProject,
+  ITaskEdge,
+  ITaskNode,
+  INodeType,
+  ITaskStatus,
+  IUpdateProjectRequest,
 } from "api/api"
 import { useParams } from "react-router-dom"
 import { useDebounce } from "@/hooks/useDebounce"
@@ -40,7 +40,7 @@ import { Textarea } from "@/components/ui/textarea"
 export default function Projects() {
   const { id } = useParams()
   const { toggleTheme, theme } = useTheme()
-  const [project, setProject] = useState<Project>()
+  const [project, setProject] = useState<IProject>()
 
   const [nodes, setNodes] = useNodesState<FlowTaskNode>(
     (project?.nodes as FlowTaskNode[]) || []
@@ -89,18 +89,18 @@ export default function Projects() {
   const saveProjectChanges = useCallback(async () => {
     if (!id) return
 
-    const nodesToAdd: TaskNode[] = nodes.filter(
-      (node) => !project?.nodes?.some((n: TaskNode) => n.id === node.id)
+    const nodesToAdd: ITaskNode[] = nodes.filter(
+      (node) => !project?.nodes?.some((n: ITaskNode) => n.id === node.id)
     )
 
-    const nodesToDelete: TaskNode[] =
+    const nodesToDelete: ITaskNode[] =
       project?.nodes?.filter(
-        (node: TaskNode) => !nodes.some((n) => n.id === node.id)
+        (node: ITaskNode) => !nodes.some((n) => n.id === node.id)
       ) || []
 
-    const nodesToChange: TaskNode[] = nodes.filter((node) => {
+    const nodesToChange: ITaskNode[] = nodes.filter((node) => {
       const existingNode = project?.nodes?.find(
-        (n: TaskNode) => n.id === node.id
+        (n: ITaskNode) => n.id === node.id
       )
       if (!existingNode) return false
 
@@ -119,16 +119,16 @@ export default function Projects() {
       return hasDataChanges || hasPositionChanges || hasTypeChange
     })
 
-    const edgesToAdd: TaskEdge[] = edges.filter(
-      (edge) => !project?.edges?.some((e: TaskEdge) => e.id === edge.id)
+    const edgesToAdd: ITaskEdge[] = edges.filter(
+      (edge) => !project?.edges?.some((e: ITaskEdge) => e.id === edge.id)
     )
 
-    const edgesToDelete: TaskEdge[] =
+    const edgesToDelete: ITaskEdge[] =
       project?.edges?.filter(
-        (edge: TaskEdge) => !edges.some((e) => e.id === edge.id)
+        (edge: ITaskEdge) => !edges.some((e) => e.id === edge.id)
       ) || []
 
-    const request: UpdateProjectRequest = {
+    const request: IUpdateProjectRequest = {
       edgesToAdd: edgesToAdd,
       edgesToRemove: edgesToDelete,
       nodesToRemove: nodesToDelete,
@@ -165,12 +165,12 @@ export default function Projects() {
   const handleAddNode = () => {
     const newNode: FlowTaskNode = {
       id: uuidv4(),
-      type: NodeType.Task,
+      type: INodeType.Task,
       position: { x: Math.random() * 500, y: Math.random() * 500 },
       data: {
         title: "",
         description: "",
-        status: TaskStatus.Todo,
+        status: ITaskStatus.Todo,
       },
     }
     setNodes((nds) => [...nds, newNode])

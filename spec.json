@@ -22,7 +22,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/ILoginRequest"
               }
             }
           }
@@ -33,7 +33,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "$ref": "#/components/schemas/ILoginResponse"
                 }
               }
             }
@@ -43,7 +43,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/IErrorResponse"
                 }
               }
             }
@@ -83,7 +83,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/IErrorResponse"
                 }
               }
             }
@@ -93,7 +93,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/IErrorResponse"
                 }
               }
             }
@@ -132,7 +132,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/IErrorResponse"
                 }
               }
             }
@@ -152,7 +152,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateProjectRequest"
+                "$ref": "#/components/schemas/ICreateProjectRequest"
               }
             }
           }
@@ -163,7 +163,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectResponse"
+                  "$ref": "#/components/schemas/IProjectResponse"
                 }
               }
             }
@@ -190,7 +190,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ProjectResponse"
+                    "$ref": "#/components/schemas/IProjectResponse"
                   }
                 }
               }
@@ -229,7 +229,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectResponse"
+                  "$ref": "#/components/schemas/IProjectResponse"
                 }
               }
             }
@@ -264,7 +264,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateProjectRequest"
+                "$ref": "#/components/schemas/IUpdateProjectRequest"
               }
             }
           }
@@ -275,7 +275,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProjectResponse"
+                  "$ref": "#/components/schemas/IProjectResponse"
                 }
               }
             }
@@ -320,7 +320,7 @@
   },
   "components": {
     "schemas": {
-      "LoginRequest": {
+      "ILoginRequest": {
         "type": "object",
         "properties": {
           "email": {
@@ -365,7 +365,7 @@
           "uid": "user123"
         }
       },
-      "LoginResponse": {
+      "ILoginResponse": {
         "type": "object",
         "properties": {
           "id": {
@@ -404,7 +404,7 @@
           "updatedAt": "2023-01-01T00:00:00.000Z"
         }
       },
-      "ErrorResponse": {
+      "IErrorResponse": {
         "type": "object",
         "properties": {
           "error": {
@@ -419,13 +419,13 @@
           "error": "An error occurred during processing"
         }
       },
-      "NodeType": {
+      "INodeType": {
         "type": "string",
         "enum": [
           "TASK"
         ]
       },
-      "TaskStatus": {
+      "ITaskStatus": {
         "type": "string",
         "enum": [
           "TODO",
@@ -433,7 +433,7 @@
           "DONE"
         ]
       },
-      "Project": {
+      "IProject": {
         "type": "object",
         "properties": {
           "id": {
@@ -455,18 +455,18 @@
           "nodes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TaskNode"
+              "$ref": "#/components/schemas/ITaskNode"
             }
           },
           "edges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TaskEdge"
+              "$ref": "#/components/schemas/ITaskEdge"
             }
           }
         }
       },
-      "TaskNode": {
+      "ITaskNode": {
         "type": "object",
         "properties": {
           "id": {
@@ -482,7 +482,7 @@
                 "type": "string"
               },
               "status": {
-                "$ref": "#/components/schemas/TaskStatus"
+                "$ref": "#/components/schemas/ITaskStatus"
               }
             }
           },
@@ -498,11 +498,11 @@
             }
           },
           "type": {
-            "$ref": "#/components/schemas/NodeType"
+            "$ref": "#/components/schemas/INodeType"
           }
         }
       },
-      "TaskEdge": {
+      "ITaskEdge": {
         "type": "object",
         "properties": {
           "id": {
@@ -515,7 +515,7 @@
             "type": "string"
           },
           "type": {
-            "$ref": "#/components/schemas/NodeType"
+            "$ref": "#/components/schemas/INodeType"
           },
           "animated": {
             "type": "boolean"
@@ -528,7 +528,7 @@
           }
         }
       },
-      "CreateProjectRequest": {
+      "ICreateProjectRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -543,7 +543,7 @@
           "name": "My New Project"
         }
       },
-      "ProjectResponse": {
+      "IProjectResponse": {
         "type": "object",
         "properties": {
           "id": {
@@ -565,24 +565,24 @@
           "nodes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TaskNode"
+              "$ref": "#/components/schemas/ITaskNode"
             }
           },
           "edges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TaskEdge"
+              "$ref": "#/components/schemas/ITaskEdge"
             }
           }
         }
       },
-      "UpdateProjectRequest": {
+      "IUpdateProjectRequest": {
         "type": "object",
         "properties": {
           "nodesToUpdate": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TaskNode"
+              "$ref": "#/components/schemas/ITaskNode"
             }
           },
           "name": {
@@ -591,7 +591,7 @@
           "nodesToAdd": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TaskNode"
+              "$ref": "#/components/schemas/ITaskNode"
             }
           },
           "nodesToRemove": {
@@ -608,7 +608,7 @@
           "edgesToAdd": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TaskEdge"
+              "$ref": "#/components/schemas/ITaskEdge"
             }
           },
           "edgesToRemove": {

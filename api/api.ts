@@ -58,112 +58,112 @@ export interface AuthRefreshTokenPost200Response {
 /**
  * 
  * @export
- * @interface CreateProjectRequest
+ * @interface ICreateProjectRequest
  */
-export interface CreateProjectRequest {
+export interface ICreateProjectRequest {
     /**
      * Name of the project
      * @type {string}
-     * @memberof CreateProjectRequest
+     * @memberof ICreateProjectRequest
      */
     'name': string;
 }
 /**
  * 
  * @export
- * @interface ErrorResponse
+ * @interface IErrorResponse
  */
-export interface ErrorResponse {
+export interface IErrorResponse {
     /**
      * Error message
      * @type {string}
-     * @memberof ErrorResponse
+     * @memberof IErrorResponse
      */
     'error': string;
 }
 /**
  * 
  * @export
- * @interface LoginRequest
+ * @interface ILoginRequest
  */
-export interface LoginRequest {
+export interface ILoginRequest {
     /**
      * User\'s email address
      * @type {string}
-     * @memberof LoginRequest
+     * @memberof ILoginRequest
      */
     'email': string;
     /**
      * User\'s display name
      * @type {string}
-     * @memberof LoginRequest
+     * @memberof ILoginRequest
      */
     'displayName': string;
     /**
      * URL to user\'s profile photo
      * @type {string}
-     * @memberof LoginRequest
+     * @memberof ILoginRequest
      */
     'photoURL'?: string;
     /**
      * User\'s phone number
      * @type {string}
-     * @memberof LoginRequest
+     * @memberof ILoginRequest
      */
     'phoneNumber'?: string;
     /**
      * User\'s unique identifier
      * @type {string}
-     * @memberof LoginRequest
+     * @memberof ILoginRequest
      */
     'uid': string;
     /**
      * Refresh token
      * @type {string}
-     * @memberof LoginRequest
+     * @memberof ILoginRequest
      */
     'refreshToken'?: string;
     /**
      * Access token
      * @type {string}
-     * @memberof LoginRequest
+     * @memberof ILoginRequest
      */
     'accessToken'?: string;
 }
 /**
  * 
  * @export
- * @interface LoginResponse
+ * @interface ILoginResponse
  */
-export interface LoginResponse {
+export interface ILoginResponse {
     /**
      * User\'s ID in the system
      * @type {string}
-     * @memberof LoginResponse
+     * @memberof ILoginResponse
      */
     'id': string;
     /**
      * User\'s email address
      * @type {string}
-     * @memberof LoginResponse
+     * @memberof ILoginResponse
      */
     'email': string;
     /**
      * Account creation timestamp
      * @type {string}
-     * @memberof LoginResponse
+     * @memberof ILoginResponse
      */
     'createdAt': string;
     /**
      * Account last update timestamp
      * @type {string}
-     * @memberof LoginResponse
+     * @memberof ILoginResponse
      */
     'updatedAt': string;
     /**
      * Access token
      * @type {string}
-     * @memberof LoginResponse
+     * @memberof ILoginResponse
      */
     'accessToken'?: string;
 }
@@ -173,145 +173,145 @@ export interface LoginResponse {
  * @enum {string}
  */
 
-export const NodeType = {
+export const INodeType = {
     Task: 'TASK'
 } as const;
 
-export type NodeType = typeof NodeType[keyof typeof NodeType];
+export type INodeType = typeof INodeType[keyof typeof INodeType];
 
 
 /**
  * 
  * @export
- * @interface Project
+ * @interface IProject
  */
-export interface Project {
+export interface IProject {
     /**
      * Unique identifier for the project
      * @type {string}
-     * @memberof Project
+     * @memberof IProject
      */
     'id'?: string;
     /**
      * Name of the project
      * @type {string}
-     * @memberof Project
+     * @memberof IProject
      */
     'name'?: string;
     /**
      * 
      * @type {string}
-     * @memberof Project
+     * @memberof IProject
      */
     'createdAt'?: string;
     /**
      * 
      * @type {string}
-     * @memberof Project
+     * @memberof IProject
      */
     'updatedAt'?: string;
     /**
      * 
-     * @type {Array<TaskNode>}
-     * @memberof Project
+     * @type {Array<ITaskNode>}
+     * @memberof IProject
      */
-    'nodes'?: Array<TaskNode>;
+    'nodes'?: Array<ITaskNode>;
     /**
      * 
-     * @type {Array<TaskEdge>}
-     * @memberof Project
+     * @type {Array<ITaskEdge>}
+     * @memberof IProject
      */
-    'edges'?: Array<TaskEdge>;
+    'edges'?: Array<ITaskEdge>;
 }
 /**
  * 
  * @export
- * @interface ProjectResponse
+ * @interface IProjectResponse
  */
-export interface ProjectResponse {
+export interface IProjectResponse {
     /**
      * Unique identifier for the project
      * @type {string}
-     * @memberof ProjectResponse
+     * @memberof IProjectResponse
      */
     'id'?: string;
     /**
      * Name of the project
      * @type {string}
-     * @memberof ProjectResponse
+     * @memberof IProjectResponse
      */
     'name'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ProjectResponse
+     * @memberof IProjectResponse
      */
     'createdAt'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ProjectResponse
+     * @memberof IProjectResponse
      */
     'updatedAt'?: string;
     /**
      * 
-     * @type {Array<TaskNode>}
-     * @memberof ProjectResponse
+     * @type {Array<ITaskNode>}
+     * @memberof IProjectResponse
      */
-    'nodes'?: Array<TaskNode>;
+    'nodes'?: Array<ITaskNode>;
     /**
      * 
-     * @type {Array<TaskEdge>}
-     * @memberof ProjectResponse
+     * @type {Array<ITaskEdge>}
+     * @memberof IProjectResponse
      */
-    'edges'?: Array<TaskEdge>;
+    'edges'?: Array<ITaskEdge>;
 }
 /**
  * 
  * @export
- * @interface TaskEdge
+ * @interface ITaskEdge
  */
-export interface TaskEdge {
+export interface ITaskEdge {
     /**
      * 
      * @type {string}
-     * @memberof TaskEdge
+     * @memberof ITaskEdge
      */
     'id'?: string;
     /**
      * 
      * @type {string}
-     * @memberof TaskEdge
+     * @memberof ITaskEdge
      */
     'source'?: string;
     /**
      * 
      * @type {string}
-     * @memberof TaskEdge
+     * @memberof ITaskEdge
      */
     'target'?: string;
     /**
      * 
-     * @type {NodeType}
-     * @memberof TaskEdge
+     * @type {INodeType}
+     * @memberof ITaskEdge
      */
-    'type'?: NodeType;
+    'type'?: INodeType;
     /**
      * 
      * @type {boolean}
-     * @memberof TaskEdge
+     * @memberof ITaskEdge
      */
     'animated'?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof TaskEdge
+     * @memberof ITaskEdge
      */
     'deletable'?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof TaskEdge
+     * @memberof ITaskEdge
      */
     'reconnectable'?: boolean;
 }
@@ -320,79 +320,79 @@ export interface TaskEdge {
 /**
  * 
  * @export
- * @interface TaskNode
+ * @interface ITaskNode
  */
-export interface TaskNode {
+export interface ITaskNode {
     /**
      * 
      * @type {string}
-     * @memberof TaskNode
+     * @memberof ITaskNode
      */
     'id'?: string;
     /**
      * 
-     * @type {TaskNodeData}
-     * @memberof TaskNode
+     * @type {ITaskNodeData}
+     * @memberof ITaskNode
      */
-    'data'?: TaskNodeData;
+    'data'?: ITaskNodeData;
     /**
      * 
-     * @type {TaskNodePosition}
-     * @memberof TaskNode
+     * @type {ITaskNodePosition}
+     * @memberof ITaskNode
      */
-    'position'?: TaskNodePosition;
+    'position'?: ITaskNodePosition;
     /**
      * 
-     * @type {NodeType}
-     * @memberof TaskNode
+     * @type {INodeType}
+     * @memberof ITaskNode
      */
-    'type'?: NodeType;
+    'type'?: INodeType;
 }
 
 
 /**
  * 
  * @export
- * @interface TaskNodeData
+ * @interface ITaskNodeData
  */
-export interface TaskNodeData {
+export interface ITaskNodeData {
     /**
      * 
      * @type {string}
-     * @memberof TaskNodeData
+     * @memberof ITaskNodeData
      */
     'title'?: string;
     /**
      * 
      * @type {string}
-     * @memberof TaskNodeData
+     * @memberof ITaskNodeData
      */
     'description'?: string;
     /**
      * 
-     * @type {TaskStatus}
-     * @memberof TaskNodeData
+     * @type {ITaskStatus}
+     * @memberof ITaskNodeData
      */
-    'status'?: TaskStatus;
+    'status'?: ITaskStatus;
 }
 
 
 /**
  * 
  * @export
- * @interface TaskNodePosition
+ * @interface ITaskNodePosition
  */
-export interface TaskNodePosition {
+export interface ITaskNodePosition {
     /**
      * 
      * @type {number}
-     * @memberof TaskNodePosition
+     * @memberof ITaskNodePosition
      */
     'x'?: number;
     /**
      * 
      * @type {number}
-     * @memberof TaskNodePosition
+     * @memberof ITaskNodePosition
      */
     'y'?: number;
 }
@@ -402,68 +402,68 @@ export interface TaskNodePosition {
  * @enum {string}
  */
 
-export const TaskStatus = {
+export const ITaskStatus = {
     Todo: 'TODO',
     InProgress: 'IN_PROGRESS',
     Done: 'DONE'
 } as const;
 
-export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus];
+export type ITaskStatus = typeof ITaskStatus[keyof typeof ITaskStatus];
 
 
 /**
  * 
  * @export
- * @interface UpdateProjectRequest
+ * @interface IUpdateProjectRequest
  */
-export interface UpdateProjectRequest {
+export interface IUpdateProjectRequest {
     /**
      * 
-     * @type {Array<TaskNode>}
-     * @memberof UpdateProjectRequest
+     * @type {Array<ITaskNode>}
+     * @memberof IUpdateProjectRequest
      */
-    'nodesToUpdate'?: Array<TaskNode>;
+    'nodesToUpdate'?: Array<ITaskNode>;
     /**
      * 
      * @type {string}
-     * @memberof UpdateProjectRequest
+     * @memberof IUpdateProjectRequest
      */
     'name'?: string;
     /**
      * 
-     * @type {Array<TaskNode>}
-     * @memberof UpdateProjectRequest
+     * @type {Array<ITaskNode>}
+     * @memberof IUpdateProjectRequest
      */
-    'nodesToAdd'?: Array<TaskNode>;
+    'nodesToAdd'?: Array<ITaskNode>;
     /**
      * 
-     * @type {Array<UpdateProjectRequestNodesToRemoveInner>}
-     * @memberof UpdateProjectRequest
+     * @type {Array<IUpdateProjectRequestNodesToRemoveInner>}
+     * @memberof IUpdateProjectRequest
      */
-    'nodesToRemove'?: Array<UpdateProjectRequestNodesToRemoveInner>;
+    'nodesToRemove'?: Array<IUpdateProjectRequestNodesToRemoveInner>;
     /**
      * 
-     * @type {Array<TaskEdge>}
-     * @memberof UpdateProjectRequest
+     * @type {Array<ITaskEdge>}
+     * @memberof IUpdateProjectRequest
      */
-    'edgesToAdd'?: Array<TaskEdge>;
+    'edgesToAdd'?: Array<ITaskEdge>;
     /**
      * 
-     * @type {Array<UpdateProjectRequestNodesToRemoveInner>}
-     * @memberof UpdateProjectRequest
+     * @type {Array<IUpdateProjectRequestNodesToRemoveInner>}
+     * @memberof IUpdateProjectRequest
      */
-    'edgesToRemove'?: Array<UpdateProjectRequestNodesToRemoveInner>;
+    'edgesToRemove'?: Array<IUpdateProjectRequestNodesToRemoveInner>;
 }
 /**
  * 
  * @export
- * @interface UpdateProjectRequestNodesToRemoveInner
+ * @interface IUpdateProjectRequestNodesToRemoveInner
  */
-export interface UpdateProjectRequestNodesToRemoveInner {
+export interface IUpdateProjectRequestNodesToRemoveInner {
     /**
      * 
      * @type {string}
-     * @memberof UpdateProjectRequestNodesToRemoveInner
+     * @memberof IUpdateProjectRequestNodesToRemoveInner
      */
     'id'?: string;
 }
@@ -477,13 +477,13 @@ export const AuthenticationToDoFlowAxiosParamCreator = function (configuration?:
         /**
          * 
          * @summary Login or register a user
-         * @param {LoginRequest} loginRequest 
+         * @param {ILoginRequest} iLoginRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        authLoginPost: async (loginRequest: LoginRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'loginRequest' is not null or undefined
-            assertParamExists('authLoginPost', 'loginRequest', loginRequest)
+        authLoginPost: async (iLoginRequest: ILoginRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'iLoginRequest' is not null or undefined
+            assertParamExists('authLoginPost', 'iLoginRequest', iLoginRequest)
             const localVarPath = `/auth/login`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -503,7 +503,7 @@ export const AuthenticationToDoFlowAxiosParamCreator = function (configuration?:
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(loginRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(iLoginRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -583,12 +583,12 @@ export const AuthenticationToDoFlowFp = function(configuration?: Configuration) 
         /**
          * 
          * @summary Login or register a user
-         * @param {LoginRequest} loginRequest 
+         * @param {ILoginRequest} iLoginRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async authLoginPost(loginRequest: LoginRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.authLoginPost(loginRequest, options);
+        async authLoginPost(iLoginRequest: ILoginRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ILoginResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.authLoginPost(iLoginRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuthenticationToDoFlow.authLoginPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -630,12 +630,12 @@ export const AuthenticationToDoFlowFactory = function (configuration?: Configura
         /**
          * 
          * @summary Login or register a user
-         * @param {LoginRequest} loginRequest 
+         * @param {ILoginRequest} iLoginRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        authLoginPost(loginRequest: LoginRequest, options?: RawAxiosRequestConfig): AxiosPromise<LoginResponse> {
-            return localVarFp.authLoginPost(loginRequest, options).then((request) => request(axios, basePath));
+        authLoginPost(iLoginRequest: ILoginRequest, options?: RawAxiosRequestConfig): AxiosPromise<ILoginResponse> {
+            return localVarFp.authLoginPost(iLoginRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -668,13 +668,13 @@ export class AuthenticationToDoFlow extends BaseAPI {
     /**
      * 
      * @summary Login or register a user
-     * @param {LoginRequest} loginRequest 
+     * @param {ILoginRequest} iLoginRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthenticationToDoFlow
      */
-    public authLoginPost(loginRequest: LoginRequest, options?: RawAxiosRequestConfig) {
-        return AuthenticationToDoFlowFp(this.configuration).authLoginPost(loginRequest, options).then((request) => request(this.axios, this.basePath));
+    public authLoginPost(iLoginRequest: ILoginRequest, options?: RawAxiosRequestConfig) {
+        return AuthenticationToDoFlowFp(this.configuration).authLoginPost(iLoginRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -810,15 +810,15 @@ export const ProjectsToDoFlowAxiosParamCreator = function (configuration?: Confi
          * Updates a project\'s nodes and edges.
          * @summary Edit a project
          * @param {string} id The project ID
-         * @param {UpdateProjectRequest} updateProjectRequest 
+         * @param {IUpdateProjectRequest} iUpdateProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsIdPatch: async (id: string, updateProjectRequest: UpdateProjectRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projectsIdPatch: async (id: string, iUpdateProjectRequest: IUpdateProjectRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('projectsIdPatch', 'id', id)
-            // verify required parameter 'updateProjectRequest' is not null or undefined
-            assertParamExists('projectsIdPatch', 'updateProjectRequest', updateProjectRequest)
+            // verify required parameter 'iUpdateProjectRequest' is not null or undefined
+            assertParamExists('projectsIdPatch', 'iUpdateProjectRequest', iUpdateProjectRequest)
             const localVarPath = `/projects/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -839,7 +839,7 @@ export const ProjectsToDoFlowAxiosParamCreator = function (configuration?: Confi
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(updateProjectRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(iUpdateProjectRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -849,13 +849,13 @@ export const ProjectsToDoFlowAxiosParamCreator = function (configuration?: Confi
         /**
          * Creates a new project with the given name.
          * @summary Create a new project
-         * @param {CreateProjectRequest} createProjectRequest 
+         * @param {ICreateProjectRequest} iCreateProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsPost: async (createProjectRequest: CreateProjectRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'createProjectRequest' is not null or undefined
-            assertParamExists('projectsPost', 'createProjectRequest', createProjectRequest)
+        projectsPost: async (iCreateProjectRequest: ICreateProjectRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'iCreateProjectRequest' is not null or undefined
+            assertParamExists('projectsPost', 'iCreateProjectRequest', iCreateProjectRequest)
             const localVarPath = `/projects`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -875,7 +875,7 @@ export const ProjectsToDoFlowAxiosParamCreator = function (configuration?: Confi
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createProjectRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(iCreateProjectRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -898,7 +898,7 @@ export const ProjectsToDoFlowFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectsGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ProjectResponse>>> {
+        async projectsGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<IProjectResponse>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectsGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectsToDoFlow.projectsGet']?.[localVarOperationServerIndex]?.url;
@@ -924,7 +924,7 @@ export const ProjectsToDoFlowFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectsIdGet(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectResponse>> {
+        async projectsIdGet(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IProjectResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projectsIdGet(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectsToDoFlow.projectsIdGet']?.[localVarOperationServerIndex]?.url;
@@ -934,12 +934,12 @@ export const ProjectsToDoFlowFp = function(configuration?: Configuration) {
          * Updates a project\'s nodes and edges.
          * @summary Edit a project
          * @param {string} id The project ID
-         * @param {UpdateProjectRequest} updateProjectRequest 
+         * @param {IUpdateProjectRequest} iUpdateProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectsIdPatch(id: string, updateProjectRequest: UpdateProjectRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.projectsIdPatch(id, updateProjectRequest, options);
+        async projectsIdPatch(id: string, iUpdateProjectRequest: IUpdateProjectRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IProjectResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectsIdPatch(id, iUpdateProjectRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectsToDoFlow.projectsIdPatch']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -947,12 +947,12 @@ export const ProjectsToDoFlowFp = function(configuration?: Configuration) {
         /**
          * Creates a new project with the given name.
          * @summary Create a new project
-         * @param {CreateProjectRequest} createProjectRequest 
+         * @param {ICreateProjectRequest} iCreateProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projectsPost(createProjectRequest: CreateProjectRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjectResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.projectsPost(createProjectRequest, options);
+        async projectsPost(iCreateProjectRequest: ICreateProjectRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IProjectResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projectsPost(iCreateProjectRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProjectsToDoFlow.projectsPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -973,7 +973,7 @@ export const ProjectsToDoFlowFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<ProjectResponse>> {
+        projectsGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<IProjectResponse>> {
             return localVarFp.projectsGet(options).then((request) => request(axios, basePath));
         },
         /**
@@ -993,29 +993,29 @@ export const ProjectsToDoFlowFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsIdGet(id: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjectResponse> {
+        projectsIdGet(id: string, options?: RawAxiosRequestConfig): AxiosPromise<IProjectResponse> {
             return localVarFp.projectsIdGet(id, options).then((request) => request(axios, basePath));
         },
         /**
          * Updates a project\'s nodes and edges.
          * @summary Edit a project
          * @param {string} id The project ID
-         * @param {UpdateProjectRequest} updateProjectRequest 
+         * @param {IUpdateProjectRequest} iUpdateProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsIdPatch(id: string, updateProjectRequest: UpdateProjectRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProjectResponse> {
-            return localVarFp.projectsIdPatch(id, updateProjectRequest, options).then((request) => request(axios, basePath));
+        projectsIdPatch(id: string, iUpdateProjectRequest: IUpdateProjectRequest, options?: RawAxiosRequestConfig): AxiosPromise<IProjectResponse> {
+            return localVarFp.projectsIdPatch(id, iUpdateProjectRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * Creates a new project with the given name.
          * @summary Create a new project
-         * @param {CreateProjectRequest} createProjectRequest 
+         * @param {ICreateProjectRequest} iCreateProjectRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projectsPost(createProjectRequest: CreateProjectRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProjectResponse> {
-            return localVarFp.projectsPost(createProjectRequest, options).then((request) => request(axios, basePath));
+        projectsPost(iCreateProjectRequest: ICreateProjectRequest, options?: RawAxiosRequestConfig): AxiosPromise<IProjectResponse> {
+            return localVarFp.projectsPost(iCreateProjectRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1066,25 +1066,25 @@ export class ProjectsToDoFlow extends BaseAPI {
      * Updates a project\'s nodes and edges.
      * @summary Edit a project
      * @param {string} id The project ID
-     * @param {UpdateProjectRequest} updateProjectRequest 
+     * @param {IUpdateProjectRequest} iUpdateProjectRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsToDoFlow
      */
-    public projectsIdPatch(id: string, updateProjectRequest: UpdateProjectRequest, options?: RawAxiosRequestConfig) {
-        return ProjectsToDoFlowFp(this.configuration).projectsIdPatch(id, updateProjectRequest, options).then((request) => request(this.axios, this.basePath));
+    public projectsIdPatch(id: string, iUpdateProjectRequest: IUpdateProjectRequest, options?: RawAxiosRequestConfig) {
+        return ProjectsToDoFlowFp(this.configuration).projectsIdPatch(id, iUpdateProjectRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Creates a new project with the given name.
      * @summary Create a new project
-     * @param {CreateProjectRequest} createProjectRequest 
+     * @param {ICreateProjectRequest} iCreateProjectRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsToDoFlow
      */
-    public projectsPost(createProjectRequest: CreateProjectRequest, options?: RawAxiosRequestConfig) {
-        return ProjectsToDoFlowFp(this.configuration).projectsPost(createProjectRequest, options).then((request) => request(this.axios, this.basePath));
+    public projectsPost(iCreateProjectRequest: ICreateProjectRequest, options?: RawAxiosRequestConfig) {
+        return ProjectsToDoFlowFp(this.configuration).projectsPost(iCreateProjectRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -11,12 +11,12 @@ import { useAuth } from "@/hooks/useAuth"
 import { useNotification } from "@/hooks/useNotification"
 import { todoFlowClient } from "@/lib/api"
 import { IconPencil, IconTrash } from "@tabler/icons-react"
-import { Project } from "api/api"
+import { IProject } from "api/api"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 export const ProjectGrid = () => {
-  const [projects, setProjects] = useState<Project[]>([])
+  const [projects, setProjects] = useState<IProject[]>([])
   const textInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -24,7 +24,7 @@ export const ProjectGrid = () => {
   const fetchProjects = useCallback(async () => {
     try {
       const response = await todoFlowClient.projectsGet()
-      const fetchedProjects = response.data.map((project: Project) => ({
+      const fetchedProjects = response.data.map((project: IProject) => ({
         ...project,
         createdAt: project.createdAt ?? "",
         updatedAt: project.updatedAt ?? "",
@@ -51,7 +51,7 @@ export const ProjectGrid = () => {
         updatedAt: response.data.updatedAt ?? "",
       }
 
-      setProjects((prev) => [...prev, newProject as Project])
+      setProjects((prev) => [...prev, newProject as IProject])
     } catch (error) {
       console.error("Failed to create project:", error)
     }

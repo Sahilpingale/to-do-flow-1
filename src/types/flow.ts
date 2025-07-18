@@ -1,5 +1,5 @@
 import { Node, Edge } from "@xyflow/react"
-import { TaskNode as ApiTaskNode, TaskEdge as ApiTaskEdge } from "api/api"
+import { ITaskNode, ITaskEdge } from "api/api"
 
-export type FlowTaskNode = Node & ApiTaskNode
-export type FlowTaskEdge = Edge & ApiTaskEdge
+export type FlowTaskNode = Node & ITaskNode
+export type FlowTaskEdge = Edge & ITaskEdge

@@ -1,7 +1,7 @@
 import type { EdgeTypes } from "@xyflow/react"
-import type { TaskEdge } from "api"
+import type { ITaskEdge } from "api"
 
-export const initialEdges: TaskEdge[] = []
+export const initialEdges: ITaskEdge[] = []
 
 export const edgeTypes = {
   // Add your custom edge types here!
