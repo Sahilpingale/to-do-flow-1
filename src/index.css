@@ -104,3 +104,22 @@ body,
   background-color: var(--node-input);
   color: var(--node-input-foreground);
 }
+
+/* Subtle selection glow animation - border only */
+@keyframes pulse-border-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.4),
+      0 0 10px rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.6),
+      0 0 15px rgba(139, 92, 246, 0.3);
+  }
+}
+
+.animate-pulse-glow {
+  position: relative;
+  will-change: box-shadow;
+  animation: pulse-border-glow 2s ease-in-out infinite;
+}

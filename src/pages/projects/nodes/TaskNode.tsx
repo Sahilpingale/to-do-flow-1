@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { TaskNodeData, TaskStatus } from "api"
 import { XIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 const statusTranslation = {
   [TaskStatus.Todo]: "Todo",
@@ -19,7 +20,11 @@ const statusTranslation = {
 }
 
 type TaskNodeProps = NodeProps<
-  Node<Pick<TaskNodeData, "title" | "description" | "status">>
+  Node<
+    Pick<TaskNodeData, "title" | "description" | "status"> & {
+      isSelected?: boolean
+    }
+  >
 >
 
 export function TaskNodeComponent(props: TaskNodeProps) {
@@ -67,7 +72,13 @@ export function TaskNodeComponent(props: TaskNodeProps) {
   }
 
   return (
-    <div className="border rounded-md p-4 node-background">
+    <div
+      className={cn(
+        "border rounded-md p-4 node-background transition-all duration-300",
+        data.isSelected && "border-violet-400 dark:border-violet-500 shadow-lg",
+        data.isSelected && "animate-pulse-glow"
+      )}
+    >
       <div className="flex justify-end">
         <XIcon
           onClick={() => handleDeleteNode(id)}

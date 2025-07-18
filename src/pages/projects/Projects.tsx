@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, useMemo } from "react"
 import {
   ReactFlow,
   Background,
@@ -22,7 +22,7 @@ import { nodeTypes } from "./nodes"
 import { edgeTypes } from "./edges"
 import { useTheme } from "@/hooks/useTheme"
 import { Button } from "@/components/ui/button"
-import { MoonIcon, SunIcon, ArrowUpIcon, SquareIcon } from "lucide-react"
+import { MoonIcon, SunIcon, ArrowUpIcon, SquareIcon, XIcon } from "lucide-react"
 import {
   Project,
   TaskEdge,
@@ -51,6 +51,23 @@ export default function Projects() {
   const [isLoading, setIsLoading] = useState(true)
   const [isProcessing, setIsProcessing] = useState(false)
   const [queryInput, setQueryInput] = useState<string>("")
+  const [selectedNodeIds, setSelectedNodeIds] = useState<Set<string>>(new Set())
+
+  // Memoize selected nodes data to prevent unnecessary re-computations
+  // const selectedNodesData = useMemo(() => {
+  //   return nodes.filter((node) => selectedNodeIds.has(node.id))
+  // }, [selectedNodeIds, nodes])
+
+  // Memoize the nodes with selection state to prevent unnecessary re-renders
+  const nodesWithSelection = useMemo(() => {
+    return nodes.map((node) => ({
+      ...node,
+      data: {
+        ...node.data,
+        isSelected: selectedNodeIds.has(node.id),
+      },
+    }))
+  }, [nodes, selectedNodeIds])
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -159,6 +176,26 @@ export default function Projects() {
     setNodes((nds) => [...nds, newNode])
   }
 
+  const handleNodeClick = useCallback(
+    (event: React.MouseEvent, node: FlowTaskNode) => {
+      event.stopPropagation()
+      setSelectedNodeIds((prev) => {
+        const newSelected = new Set(prev)
+        if (newSelected.has(node.id)) {
+          newSelected.delete(node.id) // Deselect if already selected
+        } else {
+          newSelected.add(node.id) // Select if not selected
+        }
+        return newSelected
+      })
+    },
+    []
+  )
+
+  const handleClearSelection = useCallback(() => {
+    setSelectedNodeIds(new Set())
+  }, [])
+
   const handleAIQuery = useCallback(async () => {
     if (!id) return
     if (!queryInput.trim()) return
@@ -181,9 +218,10 @@ export default function Projects() {
     <div style={{ width: "100%", height: "100%" }}>
       <ReactFlow
         colorMode={theme === "dark" ? "dark" : "light"}
-        nodes={nodes}
+        nodes={nodesWithSelection}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
+        onNodeDoubleClick={handleNodeClick}
         edges={edges}
         edgeTypes={edgeTypes}
         onEdgesChange={onEdgesChange}
@@ -197,6 +235,21 @@ export default function Projects() {
             {theme === "dark" ? <MoonIcon /> : <SunIcon />}
           </ControlButton>
         </Controls>
+
+        {/* Floating Clear Selection Button */}
+        {selectedNodeIds.size > 0 && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleClearSelection}
+              className="bg-background/90 backdrop-blur-sm border-2 hover:bg-background shadow-lg"
+            >
+              <XIcon className="w-4 h-4 mr-2" />
+              Clear Selection ({selectedNodeIds.size})
+            </Button>
+          </div>
+        )}
 
         <Panel position="bottom-right" className="p-4">
           <div className="flex gap-5">
@@ -240,7 +293,11 @@ export default function Projects() {
                 </Button>
               </div>
               <p className="select-none text-xs text-muted-foreground text-center px-2">
-                Select nodes and enter query to generate new but relevant tasks
+                {selectedNodeIds.size > 0
+                  ? `${selectedNodeIds.size} node${
+                      selectedNodeIds.size > 1 ? "s" : ""
+                    } selected • Enter query to generate relevant tasks`
+                  : "Select nodes and enter query to generate new but relevant tasks"}
               </p>
             </div>
             <Button
