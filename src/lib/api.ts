@@ -68,6 +68,7 @@ axiosInstance.interceptors.request.use(
             config.headers.Authorization = `Bearer ${firebaseToken}`
           } catch (tokenError) {
             console.error("Error getting Firebase token:", tokenError)
+            //TODO Somehow sign out the user
           }
         }
       }
@@ -127,6 +128,8 @@ axiosInstance.interceptors.response.use(
             const userData = JSON.parse(currentUserData)
             userData.accessToken = newToken
             // If the response includes a new refresh token, update it too
+
+            // If we are using HTTp-only cookie then why do we need to update the refresh token in localStorage?
             if (refreshResponse.data.refreshToken) {
               userData.refreshToken = refreshResponse.data.refreshToken
             }

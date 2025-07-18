@@ -53,7 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [])
 
   const storeFirebaseUserDataToLocalStorage = async (user: User) => {
-    setIsLoading(true)
     try {
       const response = await authClient.authLoginPost({
         uid: user.uid,
@@ -65,8 +64,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       })
       localStorage.setItem(CURRENT_USER_DATA, JSON.stringify(response.data))
       setUser(user)
-    } finally {
-      setIsLoading(false)
+    } catch (error) {
+      console.error("Error storing Firebase user data to localStorage:", error)
     }
   }
 

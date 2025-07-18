@@ -22,7 +22,7 @@ import { nodeTypes } from "./nodes"
 import { edgeTypes } from "./edges"
 import { useTheme } from "@/hooks/useTheme"
 import { Button } from "@/components/ui/button"
-import { MoonIcon, SunIcon } from "lucide-react"
+import { MoonIcon, SunIcon, ArrowUpIcon, SquareIcon } from "lucide-react"
 import {
   Project,
   TaskEdge,
@@ -35,6 +35,7 @@ import { useParams } from "react-router-dom"
 import { useDebounce } from "@/hooks/useDebounce"
 import { FlowTaskNode, FlowTaskEdge } from "@/types/flow"
 import { todoFlowClient } from "@/lib/api"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function Projects() {
   const { id } = useParams()
@@ -48,6 +49,8 @@ export default function Projects() {
     (project?.edges as FlowTaskEdge[]) || []
   )
   const [isLoading, setIsLoading] = useState(true)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [queryInput, setQueryInput] = useState<string>("")
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -156,6 +159,20 @@ export default function Projects() {
     setNodes((nds) => [...nds, newNode])
   }
 
+  const handleAIQuery = useCallback(async () => {
+    if (!id) return
+    if (!queryInput.trim()) return
+
+    setIsProcessing(true)
+    try {
+      setQueryInput("")
+    } catch (error) {
+      console.error("Failed to process AI query:", error)
+    } finally {
+      setIsProcessing(false)
+    }
+  }, [id, queryInput])
+
   if (isLoading) {
     return
   }
@@ -182,9 +199,59 @@ export default function Projects() {
         </Controls>
 
         <Panel position="bottom-right" className="p-4">
-          <Button size="lg" variant="outline" onClick={handleAddNode}>
-            Add Task
-          </Button>
+          <div className="flex gap-5">
+            {/* AI Query component */}
+            <div className="max-w-[700px] min-w-[70vw] space-y-2">
+              <div className="relative">
+                <Textarea
+                  placeholder="Describe tasks you want to generate..."
+                  value={queryInput}
+                  autosize
+                  minRows={1}
+                  maxRows={10}
+                  onChange={(e) => setQueryInput(e.target.value)}
+                  className="h-12 flex-1 pr-12 rounded-xl border-2 focus:border-violet-400 dark:focus:border-violet-500 transition-all duration-200 bg-background/80 backdrop-blur-sm"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.shiftKey) {
+                      // Allow Shift+Enter for new lines
+                      return
+                    }
+                    if (
+                      e.key === "Enter" &&
+                      !isProcessing &&
+                      queryInput.trim()
+                    ) {
+                      e.preventDefault()
+                      handleAIQuery()
+                    }
+                  }}
+                />
+                <Button
+                  size="sm"
+                  onClick={handleAIQuery}
+                  disabled={!queryInput.trim() || isProcessing}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full p-0 bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 disabled:bg-gray-400 transition-all duration-200"
+                >
+                  {isProcessing ? (
+                    <SquareIcon className="w-4 h-4 text-white" />
+                  ) : (
+                    <ArrowUpIcon className="w-4 h-4 text-white" />
+                  )}
+                </Button>
+              </div>
+              <p className="select-none text-xs text-muted-foreground text-center px-2">
+                Select nodes and enter query to generate new but relevant tasks
+              </p>
+            </div>
+            <Button
+              className="h-12 flex-shrink-0"
+              size="lg"
+              variant="outline"
+              onClick={handleAddNode}
+            >
+              Add Task
+            </Button>
+          </div>
         </Panel>
       </ReactFlow>
     </div>
