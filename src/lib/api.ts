@@ -2,6 +2,7 @@ import {
   AuthenticationToDoFlow,
   Configuration,
   ProjectsToDoFlow,
+  AIToDoFlow,
 } from "../../api"
 import axios, { InternalAxiosRequestConfig } from "axios"
 import { auth } from "@/config/firebase"
@@ -167,7 +168,7 @@ const configuration = new Configuration({
   basePath: import.meta.env.VITE_API_URL,
 })
 
-export const todoFlowClient = new ProjectsToDoFlow(
+export const projectsClient = new ProjectsToDoFlow(
   configuration,
   undefined,
   axiosInstance
@@ -178,6 +179,8 @@ export const authClient = new AuthenticationToDoFlow(
   undefined,
   axiosInstance
 )
+
+export const aiClient = new AIToDoFlow(configuration, undefined, axiosInstance)
 
 // FOR TESTING ONLY: Simulates token expiration to test refresh flow
 export const simulateTokenExpiration = async (): Promise<boolean> => {

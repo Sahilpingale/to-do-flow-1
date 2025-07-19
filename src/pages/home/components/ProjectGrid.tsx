@@ -9,7 +9,7 @@ import {
 import { TextInputWithAcceptReject } from "@/components/ui/TextInputWithAcceptReject"
 import { useAuth } from "@/hooks/useAuth"
 import { useNotification } from "@/hooks/useNotification"
-import { todoFlowClient } from "@/lib/api"
+import { projectsClient } from "@/lib/api"
 import { IconPencil, IconTrash } from "@tabler/icons-react"
 import { IProject } from "api/api"
 import { useCallback, useEffect, useRef, useState } from "react"
@@ -23,7 +23,7 @@ export const ProjectGrid = () => {
   const { addSuccessNotification, addErrorNotification } = useNotification()
   const fetchProjects = useCallback(async () => {
     try {
-      const response = await todoFlowClient.projectsGet()
+      const response = await projectsClient.projectsGet()
       const fetchedProjects = response.data.map((project: IProject) => ({
         ...project,
         createdAt: project.createdAt ?? "",
@@ -41,7 +41,7 @@ export const ProjectGrid = () => {
 
   const handleCreateProject = async () => {
     try {
-      const response = await todoFlowClient.projectsPost({
+      const response = await projectsClient.projectsPost({
         name: `Project ${projects.length + 1}`,
       })
 
@@ -59,7 +59,7 @@ export const ProjectGrid = () => {
 
   const handleDeleteProject = async (id: string) => {
     try {
-      await todoFlowClient.projectsIdDelete(id)
+      await projectsClient.projectsIdDelete(id)
       setProjects((prev) => prev.filter((project) => project.id !== id))
     } catch (error) {
       console.error("Failed to delete project:", error)
@@ -68,7 +68,7 @@ export const ProjectGrid = () => {
 
   const handleUpdateProject = async (id: string, value: string) => {
     try {
-      const response = await todoFlowClient.projectsIdPatch(id, { name: value })
+      const response = await projectsClient.projectsIdPatch(id, { name: value })
       setProjects((prev) => prev.map((p) => (p.id === id ? response.data : p)))
       addSuccessNotification("Project updated successfully")
     } catch (error) {

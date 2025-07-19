@@ -34,12 +34,15 @@ import {
 import { useParams } from "react-router-dom"
 import { useDebounce } from "@/hooks/useDebounce"
 import { FlowTaskNode, FlowTaskEdge } from "@/types/flow"
-import { todoFlowClient } from "@/lib/api"
+import { projectsClient, aiClient } from "@/lib/api"
 import { Textarea } from "@/components/ui/textarea"
+import { useNotification } from "@/hooks/useNotification"
 
 export default function Projects() {
   const { id } = useParams()
   const { toggleTheme, theme } = useTheme()
+  const { addSuccessNotification, addErrorNotification } = useNotification()
+
   const [project, setProject] = useState<IProject>()
 
   const [nodes, setNodes] = useNodesState<FlowTaskNode>(
@@ -53,12 +56,10 @@ export default function Projects() {
   const [queryInput, setQueryInput] = useState<string>("")
   const [selectedNodeIds, setSelectedNodeIds] = useState<Set<string>>(new Set())
 
-  // Memoize selected nodes data to prevent unnecessary re-computations
-  // const selectedNodesData = useMemo(() => {
-  //   return nodes.filter((node) => selectedNodeIds.has(node.id))
-  // }, [selectedNodeIds, nodes])
+  const selectedNodesData = useMemo(() => {
+    return nodes.filter((node) => selectedNodeIds.has(node.id))
+  }, [selectedNodeIds, nodes])
 
-  // Memoize the nodes with selection state to prevent unnecessary re-renders
   const nodesWithSelection = useMemo(() => {
     return nodes.map((node) => ({
       ...node,
@@ -73,7 +74,7 @@ export default function Projects() {
     const fetchProject = async () => {
       setIsLoading(true)
       try {
-        const response = await todoFlowClient.projectsIdGet(id!)
+        const response = await projectsClient.projectsIdGet(id!)
         setProject(response.data)
         setNodes((response.data.nodes as FlowTaskNode[]) || [])
         setEdges((response.data.edges as FlowTaskEdge[]) || [])
@@ -136,10 +137,17 @@ export default function Projects() {
       nodesToAdd: nodesToAdd,
     }
 
-    await todoFlowClient.projectsIdPatch(id, request)
+    await projectsClient.projectsIdPatch(id, request)
   }, [id, nodes, edges, project])
 
-  useDebounce({ nodes, edges }, () => saveProjectChanges(), 1000)
+  const debouncedSave = useCallback(
+    () => saveProjectChanges(),
+    [saveProjectChanges]
+  )
+
+  const debounceDeps = useMemo(() => ({ nodes, edges }), [nodes, edges])
+
+  useDebounce(debounceDeps, debouncedSave, 1000)
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
@@ -202,13 +210,25 @@ export default function Projects() {
 
     setIsProcessing(true)
     try {
+      await aiClient.aiGenerateTaskSuggestionsPost({
+        projectId: id,
+        query: queryInput,
+        associatedNodes: selectedNodesData,
+      })
       setQueryInput("")
+      addSuccessNotification("Generation completed")
     } catch (error) {
-      console.error("Failed to process AI query:", error)
+      addErrorNotification("Failed to process AI query")
     } finally {
       setIsProcessing(false)
     }
-  }, [id, queryInput])
+  }, [
+    id,
+    queryInput,
+    addErrorNotification,
+    addSuccessNotification,
+    selectedNodesData,
+  ])
 
   if (isLoading) {
     return
