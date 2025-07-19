@@ -84,6 +84,56 @@ export interface IErrorResponse {
 /**
  * 
  * @export
+ * @interface IGenerateTaskSuggestionsRequest
+ */
+export interface IGenerateTaskSuggestionsRequest {
+    /**
+     * The ID of the project to generate suggestions for
+     * @type {string}
+     * @memberof IGenerateTaskSuggestionsRequest
+     */
+    'projectId': string;
+    /**
+     * Natural language query describing the desired tasks
+     * @type {string}
+     * @memberof IGenerateTaskSuggestionsRequest
+     */
+    'query': string;
+    /**
+     * Array of existing task nodes that should be considered when generating suggestions
+     * @type {Array<ITaskNode>}
+     * @memberof IGenerateTaskSuggestionsRequest
+     */
+    'associatedNodes': Array<ITaskNode>;
+}
+/**
+ * 
+ * @export
+ * @interface IGenerateTaskSuggestionsResponse
+ */
+export interface IGenerateTaskSuggestionsResponse {
+    /**
+     * Indicates if the request was successful
+     * @type {boolean}
+     * @memberof IGenerateTaskSuggestionsResponse
+     */
+    'success': boolean;
+    /**
+     * Array of suggested task nodes
+     * @type {Array<ITaskNode>}
+     * @memberof IGenerateTaskSuggestionsResponse
+     */
+    'suggestions'?: Array<ITaskNode>;
+    /**
+     * Optional message about the generation process
+     * @type {string}
+     * @memberof IGenerateTaskSuggestionsResponse
+     */
+    'message'?: string;
+}
+/**
+ * 
+ * @export
  * @interface ILoginRequest
  */
 export interface ILoginRequest {
@@ -467,6 +517,116 @@ export interface IUpdateProjectRequestNodesToRemoveInner {
      */
     'id'?: string;
 }
+
+/**
+ * AIToDoFlow - axios parameter creator
+ * @export
+ */
+export const AIToDoFlowAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * Uses AI to generate task suggestions based on a natural language query and existing project context.
+         * @summary Generate AI-powered task suggestions
+         * @param {IGenerateTaskSuggestionsRequest} iGenerateTaskSuggestionsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aiGenerateTaskSuggestionsPost: async (iGenerateTaskSuggestionsRequest: IGenerateTaskSuggestionsRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'iGenerateTaskSuggestionsRequest' is not null or undefined
+            assertParamExists('aiGenerateTaskSuggestionsPost', 'iGenerateTaskSuggestionsRequest', iGenerateTaskSuggestionsRequest)
+            const localVarPath = `/ai/generate-task-suggestions`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(iGenerateTaskSuggestionsRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AIToDoFlow - functional programming interface
+ * @export
+ */
+export const AIToDoFlowFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AIToDoFlowAxiosParamCreator(configuration)
+    return {
+        /**
+         * Uses AI to generate task suggestions based on a natural language query and existing project context.
+         * @summary Generate AI-powered task suggestions
+         * @param {IGenerateTaskSuggestionsRequest} iGenerateTaskSuggestionsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aiGenerateTaskSuggestionsPost(iGenerateTaskSuggestionsRequest: IGenerateTaskSuggestionsRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IGenerateTaskSuggestionsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aiGenerateTaskSuggestionsPost(iGenerateTaskSuggestionsRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AIToDoFlow.aiGenerateTaskSuggestionsPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * AIToDoFlow - factory interface
+ * @export
+ */
+export const AIToDoFlowFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AIToDoFlowFp(configuration)
+    return {
+        /**
+         * Uses AI to generate task suggestions based on a natural language query and existing project context.
+         * @summary Generate AI-powered task suggestions
+         * @param {IGenerateTaskSuggestionsRequest} iGenerateTaskSuggestionsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aiGenerateTaskSuggestionsPost(iGenerateTaskSuggestionsRequest: IGenerateTaskSuggestionsRequest, options?: RawAxiosRequestConfig): AxiosPromise<IGenerateTaskSuggestionsResponse> {
+            return localVarFp.aiGenerateTaskSuggestionsPost(iGenerateTaskSuggestionsRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AIToDoFlow - object-oriented interface
+ * @export
+ * @class AIToDoFlow
+ * @extends {BaseAPI}
+ */
+export class AIToDoFlow extends BaseAPI {
+    /**
+     * Uses AI to generate task suggestions based on a natural language query and existing project context.
+     * @summary Generate AI-powered task suggestions
+     * @param {IGenerateTaskSuggestionsRequest} iGenerateTaskSuggestionsRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AIToDoFlow
+     */
+    public aiGenerateTaskSuggestionsPost(iGenerateTaskSuggestionsRequest: IGenerateTaskSuggestionsRequest, options?: RawAxiosRequestConfig) {
+        return AIToDoFlowFp(this.configuration).aiGenerateTaskSuggestionsPost(iGenerateTaskSuggestionsRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * AuthenticationToDoFlow - axios parameter creator
