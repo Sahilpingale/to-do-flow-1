@@ -55,6 +55,16 @@ export default function Projects() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [queryInput, setQueryInput] = useState<string>("")
   const [selectedNodeIds, setSelectedNodeIds] = useState<Set<string>>(new Set())
+  const [isResizeHandleHovered, setIsResizeHandleHovered] = useState(false)
+
+  // Callbacks for TaskNode resize handle hovering
+  const handleResizeHoverStart = useCallback(() => {
+    setIsResizeHandleHovered(true)
+  }, [])
+
+  const handleResizeHoverEnd = useCallback(() => {
+    setIsResizeHandleHovered(false)
+  }, [])
 
   const selectedNodesData = useMemo(() => {
     return nodes.filter((node) => selectedNodeIds.has(node.id))
@@ -66,9 +76,11 @@ export default function Projects() {
       data: {
         ...node.data,
         isSelected: selectedNodeIds.has(node.id),
+        onResizeHoverStart: handleResizeHoverStart,
+        onResizeHoverEnd: handleResizeHoverEnd,
       },
     }))
-  }, [nodes, selectedNodeIds])
+  }, [nodes, selectedNodeIds, handleResizeHoverStart, handleResizeHoverEnd])
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -253,6 +265,8 @@ export default function Projects() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
+        nodesDraggable={!isResizeHandleHovered}
+        panOnDrag={!isResizeHandleHovered}
       >
         <Background />
         <MiniMap position="bottom-left" />
