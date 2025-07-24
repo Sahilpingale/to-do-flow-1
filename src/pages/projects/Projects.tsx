@@ -210,11 +210,16 @@ export default function Projects() {
 
     setIsProcessing(true)
     try {
-      await aiClient.aiGenerateTaskSuggestionsPost({
+      const response = await aiClient.aiGenerateTaskSuggestionsPost({
         projectId: id,
         query: queryInput,
         associatedNodes: selectedNodesData,
       })
+      setNodes((nds) => [
+        ...nds,
+        ...(response.data.suggestions as FlowTaskNode[]),
+      ])
+
       setQueryInput("")
       addSuccessNotification("Generation completed")
     } catch (error) {
@@ -228,6 +233,7 @@ export default function Projects() {
     addErrorNotification,
     addSuccessNotification,
     selectedNodesData,
+    setNodes,
   ])
 
   if (isLoading) {

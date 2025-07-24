@@ -10,7 +10,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "watch": "tsc --noEmit --watch",
-    "generate-client": "openapi-generator-cli generate -i spec.json -g typescript-axios -o api -c config.json"
+    "generate-client": "openapi-generator-cli generate -i ../to-do-flow-backend/spec.json -g typescript-axios -o api -c config.json"
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.2",

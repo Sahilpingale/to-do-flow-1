@@ -113,23 +113,17 @@ export interface IGenerateTaskSuggestionsRequest {
  */
 export interface IGenerateTaskSuggestionsResponse {
     /**
-     * Indicates if the request was successful
-     * @type {boolean}
-     * @memberof IGenerateTaskSuggestionsResponse
-     */
-    'success': boolean;
-    /**
      * Array of suggested task nodes
      * @type {Array<ITaskNode>}
      * @memberof IGenerateTaskSuggestionsResponse
      */
-    'suggestions'?: Array<ITaskNode>;
+    'suggestions': Array<ITaskNode>;
     /**
      * Optional message about the generation process
      * @type {string}
      * @memberof IGenerateTaskSuggestionsResponse
      */
-    'message'?: string;
+    'message': string;
 }
 /**
  * 
