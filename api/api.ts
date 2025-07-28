@@ -387,6 +387,12 @@ export interface ITaskNode {
     'position'?: ITaskNodePosition;
     /**
      * 
+     * @type {ITaskNodeMeasured}
+     * @memberof ITaskNode
+     */
+    'measured'?: ITaskNodeMeasured;
+    /**
+     * 
      * @type {INodeType}
      * @memberof ITaskNode
      */
@@ -421,6 +427,25 @@ export interface ITaskNodeData {
 }
 
 
+/**
+ * 
+ * @export
+ * @interface ITaskNodeMeasured
+ */
+export interface ITaskNodeMeasured {
+    /**
+     * 
+     * @type {number}
+     * @memberof ITaskNodeMeasured
+     */
+    'width'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ITaskNodeMeasured
+     */
+    'height'?: number;
+}
 /**
  * 
  * @export

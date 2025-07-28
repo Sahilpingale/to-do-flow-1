@@ -28,6 +28,8 @@ type TaskNodeProps = NodeProps<
       isSelected?: boolean
       onResizeHoverStart?: () => void
       onResizeHoverEnd?: () => void
+      width?: number
+      height?: number
     }
   >
 >
@@ -78,8 +80,8 @@ export function TaskNodeComponent(props: TaskNodeProps) {
 
   return (
     <ResizableBox
-      width={400}
-      height={300}
+      width={data.width || 400}
+      height={data.height || 325}
       minConstraints={[400, 325]}
       maxConstraints={[600, 525]}
       resizeHandles={["se"]}
@@ -95,6 +97,25 @@ export function TaskNodeComponent(props: TaskNodeProps) {
           }}
         />
       )}
+      onResizeStop={(_e, data) => {
+        // e.stopPropagation()
+        // Update the node dimensions in ReactFlow state
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === id) {
+              return {
+                ...node,
+                measured: {
+                  ...node.measured,
+                  width: data.size.width,
+                  height: data.size.height,
+                },
+              }
+            }
+            return node
+          })
+        )
+      }}
     >
       <div
         className={cn(
@@ -132,7 +153,6 @@ export function TaskNodeComponent(props: TaskNodeProps) {
               autosize
               maxRows={10}
               minRows={5}
-              onFocus={() => data}
             />
           </div>
           <div className="flex flex-col gap-2">

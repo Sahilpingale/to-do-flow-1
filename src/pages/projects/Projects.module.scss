@@ -1,0 +1,29 @@
+.split {
+  display: flex;
+  flex-direction: row;
+
+  :global(.gutter) {
+    background-color: #eee;
+    background-position: 50%;
+    background-repeat: no-repeat;
+  }
+
+  :global(.gutter-horizontal) {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+    cursor: col-resize;
+  }
+
+  &.right-section-collapsed {
+    .left {
+      width: 100% !important;
+    }
+
+    :global(.gutter) {
+      display: none;
+    }
+
+    .right {
+      visibility: hidden;
+    }
+  }
+}

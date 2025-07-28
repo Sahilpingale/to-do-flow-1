@@ -22,7 +22,7 @@ import { nodeTypes } from "./nodes"
 import { edgeTypes } from "./edges"
 import { useTheme } from "@/hooks/useTheme"
 import { Button } from "@/components/ui/button"
-import { MoonIcon, SunIcon, ArrowUpIcon, SquareIcon, XIcon } from "lucide-react"
+import { MoonIcon, SunIcon, XIcon, MenuIcon } from "lucide-react"
 import {
   IProject,
   ITaskEdge,
@@ -35,8 +35,11 @@ import { useParams } from "react-router-dom"
 import { useDebounce } from "@/hooks/useDebounce"
 import { FlowTaskNode, FlowTaskEdge } from "@/types/flow"
 import { projectsClient, aiClient } from "@/lib/api"
-import { Textarea } from "@/components/ui/textarea"
 import { useNotification } from "@/hooks/useNotification"
+import { SideBar } from "./components/SideBar"
+import Split from "react-split"
+import styles from "./Projects.module.scss"
+import { classNames } from "@/helpers/class-helpers"
 
 export default function Projects() {
   const { id } = useParams()
@@ -56,6 +59,7 @@ export default function Projects() {
   const [queryInput, setQueryInput] = useState<string>("")
   const [selectedNodeIds, setSelectedNodeIds] = useState<Set<string>>(new Set())
   const [isResizeHandleHovered, setIsResizeHandleHovered] = useState(false)
+  const [rightChildVisible, setRightChildVisible] = useState(false)
 
   // Callbacks for TaskNode resize handle hovering
   const handleResizeHoverStart = useCallback(() => {
@@ -127,9 +131,15 @@ export default function Projects() {
         node.position?.x !== existingNode.position?.x ||
         node.position?.y !== existingNode.position?.y
 
+      const hasSizeChanges =
+        node.measured?.width !== existingNode.measured?.width ||
+        node.measured?.height !== existingNode.measured?.height
+
       const hasTypeChange = node.type !== existingNode.type
 
-      return hasDataChanges || hasPositionChanges || hasTypeChange
+      return (
+        hasDataChanges || hasPositionChanges || hasTypeChange || hasSizeChanges
+      )
     })
 
     const edgesToAdd: ITaskEdge[] = edges.filter(
@@ -253,104 +263,81 @@ export default function Projects() {
   }
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <ReactFlow
-        colorMode={theme === "dark" ? "dark" : "light"}
-        nodes={nodesWithSelection}
-        nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
-        onNodeDoubleClick={handleNodeClick}
-        edges={edges}
-        edgeTypes={edgeTypes}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        fitView
-        nodesDraggable={!isResizeHandleHovered}
-        panOnDrag={!isResizeHandleHovered}
-      >
-        <Background />
-        <MiniMap position="bottom-left" />
-        <Controls position="top-right">
-          <ControlButton onClick={toggleTheme}>
-            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
-          </ControlButton>
-        </Controls>
-
-        {/* Floating Clear Selection Button */}
-        {selectedNodeIds.size > 0 && (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleClearSelection}
-              className="bg-background/90 backdrop-blur-sm border-2 hover:bg-background shadow-lg"
+    <Split
+      gutterSize={7}
+      style={{ height: "100%", width: "100%" }}
+      sizes={rightChildVisible ? [75, 25] : [100, 0]}
+      minSize={rightChildVisible ? 350 : 0}
+      className={classNames(
+        styles.split,
+        !rightChildVisible && styles["right-section-collapsed"]
+      )}
+    >
+      <div className={styles.left}>
+        <ReactFlow
+          colorMode={theme === "dark" ? "dark" : "light"}
+          nodes={nodesWithSelection}
+          nodeTypes={nodeTypes}
+          onNodesChange={onNodesChange}
+          onNodeDoubleClick={handleNodeClick}
+          edges={edges}
+          edgeTypes={edgeTypes}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          fitView
+          nodesDraggable={!isResizeHandleHovered}
+          panOnDrag={!isResizeHandleHovered}
+        >
+          <Background />
+          <MiniMap position="top-left" />
+          <Controls position="top-right">
+            <ControlButton onClick={toggleTheme}>
+              {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+            </ControlButton>
+            <ControlButton
+              onClick={() => setRightChildVisible(!rightChildVisible)}
             >
-              <XIcon className="w-4 h-4 mr-2" />
-              Clear Selection ({selectedNodeIds.size})
-            </Button>
-          </div>
-        )}
+              {rightChildVisible ? <XIcon /> : <MenuIcon />}
+            </ControlButton>
+          </Controls>
 
-        <Panel position="bottom-right" className="p-4">
-          <div className="flex gap-5">
-            {/* AI Query component */}
-            <div className="max-w-[700px] min-w-[70vw] space-y-2">
-              <div className="relative">
-                <Textarea
-                  placeholder="Describe tasks you want to generate..."
-                  value={queryInput}
-                  autosize
-                  minRows={1}
-                  maxRows={10}
-                  onChange={(e) => setQueryInput(e.target.value)}
-                  className="h-12 flex-1 pr-12 rounded-xl border-2 focus:border-violet-400 dark:focus:border-violet-500 transition-all duration-200 bg-background/80 backdrop-blur-sm"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && e.shiftKey) {
-                      // Allow Shift+Enter for new lines
-                      return
-                    }
-                    if (
-                      e.key === "Enter" &&
-                      !isProcessing &&
-                      queryInput.trim()
-                    ) {
-                      e.preventDefault()
-                      handleAIQuery()
-                    }
-                  }}
-                />
-                <Button
-                  size="sm"
-                  onClick={handleAIQuery}
-                  disabled={!queryInput.trim() || isProcessing}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full p-0 bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 disabled:bg-gray-400 transition-all duration-200"
-                >
-                  {isProcessing ? (
-                    <SquareIcon className="w-4 h-4 text-white" />
-                  ) : (
-                    <ArrowUpIcon className="w-4 h-4 text-white" />
-                  )}
-                </Button>
-              </div>
-              <p className="select-none text-xs text-muted-foreground text-center px-2">
-                {selectedNodeIds.size > 0
-                  ? `${selectedNodeIds.size} node${
-                      selectedNodeIds.size > 1 ? "s" : ""
-                    } selected • Enter query to generate relevant tasks`
-                  : "Select nodes and enter query to generate new but relevant tasks"}
-              </p>
+          {/* Floating Clear Selection Button */}
+          {selectedNodeIds.size > 0 && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleClearSelection}
+                className="bg-background/90 backdrop-blur-sm border-2 hover:bg-background shadow-lg"
+              >
+                <XIcon className="w-4 h-4 mr-2" />
+                Clear Selection ({selectedNodeIds.size})
+              </Button>
             </div>
-            <Button
-              className="h-12 flex-shrink-0"
-              size="lg"
-              variant="outline"
-              onClick={handleAddNode}
-            >
-              Add Task
-            </Button>
-          </div>
-        </Panel>
-      </ReactFlow>
-    </div>
+          )}
+
+          <Panel position="bottom-left" className="p-4">
+            <div className="flex gap-5">
+              <Button
+                className="h-12 flex-shrink-0"
+                size="lg"
+                variant="outline"
+                onClick={handleAddNode}
+              >
+                Add Task
+              </Button>
+            </div>
+          </Panel>
+        </ReactFlow>
+      </div>
+      <div className={styles.right}>
+        <SideBar
+          queryInput={queryInput}
+          setQueryInput={setQueryInput}
+          isProcessing={isProcessing}
+          handleAIQuery={handleAIQuery}
+        />
+      </div>
+    </Split>
   )
 }
